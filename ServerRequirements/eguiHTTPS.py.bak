@@ -58,6 +58,7 @@ class SimpleHTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             self.copyfile(f, self.wfile)
             f.close()
 
+
     def do_HEAD(self):
         """Serve a HEAD request."""
         f = self.send_head()
@@ -279,10 +280,6 @@ if __name__ == '__main__':
     httpd = BaseHTTPServer.HTTPServer(('0.0.0.0', PORT), SimpleHTTPRequestHandler)
     httpd.socket = ssl.wrap_socket (httpd.socket, certfile='./ServerRequirements/server.pem', server_side=True)
     print "[!] Server listening on port", PORT
-    
-    buffer = 1
-    sys.stderr = open('./ServerRequirements/log.txt', 'a', buffer)
-    
     httpd.serve_forever()
 
 

