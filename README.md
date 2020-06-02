@@ -12,27 +12,15 @@ These instructions will get you a copy of the project up and running on your loc
 This has been created and tested with Python 2.7.
 TODO: Port to Python 3
 
-```
-Give examples
-```
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
+Install python requirements
 
 ```
-Give the example
+pip install -r requirements.txt
 ```
 
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
 
 ## Usage
 
@@ -40,21 +28,24 @@ Explain how to run the automated tests for this system
 
 ### Create the Victim Powershell agent
 
-Explain what these tests test and why
+Create a custom powershell victim agent
 
 ```
-Give an example
+python config.py
 ```
+
 
 Once you deploy the powershell agent and its running, you can start the server
 
 ### Starting the CnC Server
 
-Explain what these tests test and why
+Run the commandServer.py
 
 ```
-Give an example
+python commandServer.py
 ```
+
+If you don't specify a port, specify one ```python commandServer.py -p 8080``` like so
 
 ## Authors
 
