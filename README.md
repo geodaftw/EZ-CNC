@@ -1,10 +1,70 @@
-This is a easy, or, EZ, Command and Control Server package.
 
-The Command and Control server runs python and stands up a web server that the victim will communicate with to get its commands. 
+# EZ CnC
 
-There's also a config.py file that can be used to generate the C&C Agent. This is the file you will deploy to the victim.
+This is a project I created to demonstrate how a Command and Control (C&C) Server and Agent communicate. The server runs python and stands up a web server. A powershell script (generated with config.py) needs to be deployed and ran on the victim machine. This will then loop the script and communicate with the CnC server for its tasks.
 
-When running the main script "commandServer.py" you will specify the port you want your C&C Server to listen on. IT can be the same IP/port as what the C&C Agent is listening to, or a different IP/Port if you have another system that will be performing the hopping.
+## Getting Started
 
-Further help can be found when running commandServer.py
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
+### Prerequisites
+
+This has been created and tested with Python 2.7.
+TODO: Port to Python 3
+
+```
+Give examples
+```
+
+### Installing
+
+A step by step series of examples that tell you how to get a development env running
+
+Say what the step will be
+
+```
+Give the example
+```
+
+And repeat
+
+```
+until finished
+```
+
+End with an example of getting some data out of the system or using it for a little demo
+
+## Usage
+
+Explain how to run the automated tests for this system
+
+### Create the Victim Powershell agent
+
+Explain what these tests test and why
+
+```
+Give an example
+```
+
+Once you deploy the powershell agent and its running, you can start the server
+
+### Starting the CnC Server
+
+Explain what these tests test and why
+
+```
+Give an example
+```
+
+## Authors
+
+* **Eric Guillen** - *Initial work* - [geoda](https://twitter.com/ericsguillen)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+## Acknowledgments
+
+* Thanks to jhind for the push
+* Thanks to SecKC for being awesome
