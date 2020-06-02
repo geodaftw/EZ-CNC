@@ -1,12 +1,10 @@
-##############################
-######## EZ CNC ##############
-##############################
+This is a easy, or, EZ, Command and Control Server package.
 
-To begin, run config.sh to generate an agent that you will deploy
-Give the IP and port you want the server to listen on.
-# NOTE: This IP and Port can be different than your main server since you can set up forwarding on the specific IP and Port so your main server doesn't get burned
-This will create a file in ./AgentRequirements/*.ps1 with the file you will deploy to the victim
+The Command and Control server runs python and stands up a web server that the victim will communicate with to get its commands. 
 
-Run the commandServer.sh, specify the port you want your C&C Server to listen on
+There's also a config.py file that can be used to generate the C&C Agent. This is the file you will deploy to the victim.
 
-Further help can be found when running commandServer.sh
+When running the main script "commandServer.py" you will specify the port you want your C&C Server to listen on. IT can be the same IP/port as what the C&C Agent is listening to, or a different IP/Port if you have another system that will be performing the hopping.
+
+Further help can be found when running commandServer.py
+
