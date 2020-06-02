@@ -5,6 +5,14 @@ import base64
 import time
 import datetime
 
+#############
+##
+## Simple Server that checks eguiHTTPS.py logs and prints back
+## Saves to log file
+## 
+## Add more info here
+#########################
+
 # Generate Time as Log
 t = time.localtime()
 current_time = time.strftime("%H%M%S", t)
