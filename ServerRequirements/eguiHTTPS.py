@@ -36,6 +36,10 @@ if len(sys.argv)<2:
 else:
     PORT = int(sys.argv[1])
 
+
+
+
+
 class SimpleHTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
     """Simple HTTP request handler with GET and HEAD commands.
@@ -276,12 +280,21 @@ class SimpleHTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
 if __name__ == '__main__':
  #   test()
+    
+    ######
+    ## Change current Directory
+    ######
+    web_dir = os.path.join(os.path.dirname(__file__), '../WebOnly')
+    os.chdir(web_dir)
+    
     httpd = BaseHTTPServer.HTTPServer(('0.0.0.0', PORT), SimpleHTTPRequestHandler)
-    httpd.socket = ssl.wrap_socket (httpd.socket, certfile='./ServerRequirements/server.pem', server_side=True)
+    httpd.socket = ssl.wrap_socket (httpd.socket, certfile='../ServerRequirements/server.pem', server_side=True)
+    #httpd.socket = ssl.wrap_socket (httpd.socket, certfile='./ServerRequirements/server.pem', server_side=True)
     print "[!] Server listening on port", PORT
     
     buffer = 1
-    sys.stderr = open('./ServerRequirements/log.txt', 'a', buffer)
+    sys.stderr = open('../ServerRequirements/log.txt', 'a', buffer)
+    #sys.stderr = open('./ServerRequirements/log.txt', 'a', buffer)
     
     httpd.serve_forever()
 

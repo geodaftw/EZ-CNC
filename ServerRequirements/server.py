@@ -50,9 +50,10 @@ while True:
             Output = str(SearchStr.groups())
             
             try:  
-                Input = base64.b64decode(Output.split("/")[2]) # Made a 2 instead of 1 because of SErverRequirements
+                Input = base64.b64decode(Output.split("/")[1]) # Made a 2 instead of 1 because of SErverRequirements
+                # Changed back to 1 instead of a 2 because I removed ServerRequirements directory
                 #print Input
-                Results = base64.b64decode(Output.split("/")[3])
+                Results = base64.b64decode(Output.split("/")[2])
                 #print Results
             except IndexError:
                 continue

@@ -1,6 +1,6 @@
 import os
 
-skeleton = 'test.ps1'
+skeleton = 'template.ps1.new'
 fileName = 'EZCNC-Agent.ps1'
 
 print "[+] What is the IP Address of the Server"
