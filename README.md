@@ -110,6 +110,7 @@ Archived files from previous testing. Will be removed when version 1.0 is comple
 * Move from Python2.7 to Python3.x
 * Jitter calls to Server (Replicate with Agent)
 * Mask Agent Detection
+* Strip Agent comments / Obfuscate from template
 
 ## Authors
 
