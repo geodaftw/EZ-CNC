@@ -12,7 +12,7 @@
                                                        
          Written By: Eric "geoda" Guillen
          Twitter: @ericsguillen
-	            Version 0.3.1
+	            Version 0.3.2
 
 
 This is a project I created to demonstrate how a Command and Control (C&C) Server and Agent communicate. The server runs python and stands up a web server. A powershell script (generated with config.py) needs to be deployed and ran on the victim machine. This will then loop the script and communicate with the CnC server for its tasks. 
