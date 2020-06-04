@@ -33,3 +33,9 @@ with open('./AgentRequirements/' + skeleton, 'r') as f:
         i.write(line)
         i.close
 
+print("[*] Generating Self-Signed Certificate...")
+
+os.system("openssl req -new -x509 -keyout ./ServerRequirements/server-priv.key -out ./ServerRequirements/server.pem -days 365 -nodes -subj '/C=US' >/dev/null 2>&1")
+
+
+print("[*] Certificate created and written to ./ServerRequirements/server.pem")
