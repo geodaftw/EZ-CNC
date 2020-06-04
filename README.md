@@ -71,11 +71,12 @@ If you don't specify a port, specify one ```python commandServer.py -p 8080``` l
 
 The server will start up stating the port it's listening on.
 
-Currently there are 4 options:
+Currently there are 5 options:
 1. __COMMAND__: Commands to issue on the victim such as ```whoami``` or ```hostname``` or ```ipconfig```
 2. __UPLOAD FROM VICTIM__: This is a file you want to pull from the victim. Either give the full path, or if the file is in the current working directory, you will not need to. The file will be saved to __./Files/__
 3. __DOWNLOAD TO VICTIM__: This is a file you want to push to the victim. The file will need to be already in the __./Files/__ directory. Simply give the filename and the file will be saved to the current working directory. #TODO: Specify file location
 4. __SCREENSHOT__: This will take a screenshot of the victim's screen. THe .bmp file will be saved to __./Screenshots/__ with the current timestamp as the filename
+5. __SHELL__: Run local shell commands on the CNC Server such as ```ls -lah``` to list current directory or even ```vim /tmp/file.txt``` to open a file to edit. This is helpful when needing to copy files to __./Files/__ or validate certain things
 
 ### Folder Structure
 Idea of how the folder is structured
@@ -117,7 +118,6 @@ Archived files from previous testing. Will be removed when version 1.0 is comple
 * Mask Agent Detection
 * Strip Agent comments / Obfuscate from template
 * Run Agent in background (Maybe need another file to upload)
-* Allow the ability to run local commands while still running the server
 
 ## Authors
 
