@@ -12,9 +12,9 @@
                                                         
        A Command & Control Server/Agent that's Easy                
 		   						    
-     	  Written By: Eric "geoda" Guillen			
-          Twitter: @ericsguillen				
-	  Version 0.3.2						
+     	  Written By: Eric "geoda" Guillen
+          Twitter: @ericsguillen
+	  Version 0.3.2	
 
 
 
