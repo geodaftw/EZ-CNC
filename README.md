@@ -54,7 +54,7 @@ EZ CNC has 4 steps total:
 
 ### Create the Victim Powershell agent
 
-Create a custom powershell victim agent
+Create a custom powershell victim agent. This also creates a self-signed certificate. *Maybe this should be added to customCommand.py instaed of config.py... to be continued..*
 
 ```
 python config.py
