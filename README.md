@@ -62,10 +62,10 @@ Once you deploy the powershell agent and its running, you can start the server
 
 ### Starting the CnC Server
 
-Run the commandServer.py -p <Port>
+Run the commandServer.py and specify the port
 
 ```
-python commandServer.py
+python commandServer.py -p <port>
 ```
 If you don't specify a port, specify one ```python commandServer.py -p 8080``` like so. FOr most purpoases, this will be the same port when generating the Agent.
 
