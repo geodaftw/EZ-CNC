@@ -42,7 +42,11 @@ pip install -r requirements.txt
 
 ## Usage
 
-Explain how to run the automated tests for this system
+EZ CNC has 4 steps total:
+1. Run the ```config.py``` to generate an Agent (```EZCNC-Agent.ps1```)
+1. Deploy Agent to victim and run the ```EZCNC-Agent.ps1``` script
+1. Run the ```commandServer.py``` to launch a CNC Command Server
+1. Issue commands within the Command Server. Results will be displayed on the screen. Further details can be found below
 
 ### Create the Victim Powershell agent
 
@@ -58,12 +62,12 @@ Once you deploy the powershell agent and its running, you can start the server
 
 ### Starting the CnC Server
 
-Run the commandServer.py
+Run the commandServer.py -p <Port>
 
 ```
 python commandServer.py
 ```
-If you don't specify a port, specify one ```python commandServer.py -p 8080``` like so
+If you don't specify a port, specify one ```python commandServer.py -p 8080``` like so. FOr most purpoases, this will be the same port when generating the Agent.
 
 The server will start up stating the port it's listening on.
 
@@ -113,6 +117,7 @@ Archived files from previous testing. Will be removed when version 1.0 is comple
 * Mask Agent Detection
 * Strip Agent comments / Obfuscate from template
 * Run Agent in background (Maybe need another file to upload)
+* Allow the ability to run local commands while still running the server
 
 ## Authors
 
