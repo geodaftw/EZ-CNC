@@ -126,6 +126,7 @@ Archived files from previous testing. Will be removed when version 1.0 is comple
 * Jitter calls to Server (Replicate with Agent)
 * Mask Agent Detection
 * Run Agent in background (Maybe need another file to upload)
+* Run custom scripts (located in ./scripts/)
 
 ## Authors
 
