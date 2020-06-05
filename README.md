@@ -14,7 +14,7 @@
 		   						    
           Written By: Eric "geoda" Guillen
           Twitter: @ericsguillen
-          Version 0.3.2	
+          Version 0.3.3
 
 
 
@@ -54,13 +54,18 @@ EZ CNC has 4 steps total:
 
 ### Create the Victim Powershell agent
 
-Create a custom powershell victim agent. This also creates a self-signed certificate. *Maybe this should be added to customCommand.py instaed of config.py... to be continued..*
+Create a custom powershell victim agent. 
+The following available options are given when running ```config.py```
+* Prompts for Server IP and Port
+* Remove Comments from final Agent
+* Remove Print Statements from final Agent
+* Generate a self-signed certificate
 
 ```
 python config.py
 ```
 
-It will ask you for a Server IP and Port. Once complete, the Victim agent will be saved to __./AgentRequirements/EZCNC-Agent.ps1__. This will be the powershell script to deploy to the victim.
+Once complete, the Victim agent will be saved to __./AgentRequirements/EZCNC-Agent.ps1__. This will be the powershell script to deploy to the victim.
 
 Once you deploy the powershell agent and its running, you can start the server
 
@@ -120,7 +125,7 @@ Archived files from previous testing. Will be removed when version 1.0 is comple
 * Move from Python2.7 to Python3.x
 * Jitter calls to Server (Replicate with Agent)
 * Mask Agent Detection
-* Strip Agent comments / Obfuscate from template
+* Remove 404 message from Agent response
 * Run Agent in background (Maybe need another file to upload)
 
 ## Authors
