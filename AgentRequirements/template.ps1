@@ -28,6 +28,8 @@ v0.2
 v0.3
     - Fixed requests to not go to ServerRequirements, instead it's in a single directory (known by server) .. so just go to <IP>:<port> for commands. Everything will be placed in that same directory (root of 'web server'). Everything will be handled by web server
     - Added comments
+
+END COMMENTS # LEAVE THIS.. needed for config.py
 #>
 
 
