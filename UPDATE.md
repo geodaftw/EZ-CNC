@@ -34,6 +34,12 @@
 * TODO: Process Migration
 * TODO: Run in background
 * TODO: Remove comments (Leverage Template, but strip out comments/print statements)
+* TODO: Fix 404 error when pushing commands back to Server
+
+## CONFIG
+* TODO: Fix SSL Certificate
+* TODO: Give option to strip comments
+* TODO: Give option to strip print statements
 
 ## Port to Python
 
