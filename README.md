@@ -125,7 +125,6 @@ Archived files from previous testing. Will be removed when version 1.0 is comple
 * Move from Python2.7 to Python3.x
 * Jitter calls to Server (Replicate with Agent)
 * Mask Agent Detection
-* Remove 404 message from Agent response
 * Run Agent in background (Maybe need another file to upload)
 
 ## Authors
