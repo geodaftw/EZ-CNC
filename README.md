@@ -80,7 +80,7 @@ If you don't specify a port, specify one ```python commandServer.py -p 8080``` l
 
 The server will start up stating the port it's listening on.
 
-Currently there are 5 options:
+Currently there are 6 options (with more options in the future):
 1. __COMMAND__: Commands to issue on the victim such as ```whoami``` or ```hostname``` or ```ipconfig```
 2. __UPLOAD FROM VICTIM__: This is a file you want to pull from the victim. Either give the full path, or if the file is in the current working directory, you will not need to. The file will be saved to __./Files/__
 3. __DOWNLOAD TO VICTIM__: This is a file you want to push to the victim. The file will need to be already in the __./Files/__ directory. Simply give the filename and the file will be saved to the current working directory. #TODO: Specify file location
