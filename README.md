@@ -101,6 +101,9 @@ This is where screenshots will be saved. Filename is timestamped
 ##### /Logs/
 This is where you will find log output for future reference
 
+##### /Scripts/
+This is where custom scripts will be placed that you can run on the victim. 
+
 ##### /AgentRequirements/
 This is where the Agent will be saved after running ```python config.py```
 
