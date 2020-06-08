@@ -19,9 +19,9 @@
 
 
 
-This is a project I created to demonstrate how a Command and Control (C&C) Server and Agent communicate. The server runs python and stands up a custom simple http web server. A powershell script (generated with config.py) needs to be deployed and ran on the victim machine. This will then loop the script and communicate with the CnC server for its tasks. 
+This is a project I created to demonstrate how a Command and Control (C&C) Server and Agent communicate. The server runs python and stands up a web server. A powershell script (generated with config.py) needs to be deployed and ran on the victim machine. This will then loop the script and communicate with the CnC server for its tasks. 
 
-*Note: While you can run cmd/shell commands, this is not a shell.*
+*Note: While it acts like a shell, this is not a shell.*
 
 *Note: This is strictly for educational and research purposes and not to be used in ANY environment without proper consent*
 
@@ -125,8 +125,8 @@ Archived files from previous testing. Will be removed when version 1.0 is comple
 * Move from Python2.7 to Python3.x
 * Jitter calls to Server (Replicate with Agent)
 * Mask Agent Detection
+* Remove 404 message from Agent response
 * Run Agent in background (Maybe need another file to upload)
-* Run custom scripts (located in ./scripts/)
 
 ## Authors
 

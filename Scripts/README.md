@@ -1,3 +1,2 @@
-# Scripts
-This is where custom scripts will be held
+# This is where custom scripts will be held
 

