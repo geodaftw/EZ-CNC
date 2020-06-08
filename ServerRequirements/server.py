@@ -61,9 +61,11 @@ while True:
                 continue
 
             if Input != oldInput:
-                print "Command: " + Input
-                print "Output: " + Results
-               
+                #print "Command: " + Input
+                #print "Output: " + Results
+                print("\033[1;32;40m " + "Command: " + Input + "\033[0;37;40m")
+                print("\033[1;32;40m " + "Output: " + Results + "\033[0;37;40m")
+
                 # Save to Log
                 f = open("./Logs/" + LOG + "-log.txt", "a")
                 f.write(Input + '\n')

