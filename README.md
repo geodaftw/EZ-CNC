@@ -80,13 +80,14 @@ If you don't specify a port, specify one ```python commandServer.py -p 8080``` l
 
 The server will start up stating the port it's listening on.
 
-Currently there are 6 options (with more options in the future):
+Currently there are 7 options (with more options in the future):
 1. __COMMAND__: Commands to issue on the victim such as ```whoami``` or ```hostname``` or ```ipconfig```
 2. __UPLOAD FROM VICTIM__: This is a file you want to pull from the victim. Either give the full path, or if the file is in the current working directory, you will not need to. The file will be saved to __./Files/__
 3. __DOWNLOAD TO VICTIM__: This is a file you want to push to the victim. The file will need to be already in the __./Files/__ directory. Simply give the filename and the file will be saved to the current working directory. #TODO: Specify file location
 4. __SCREENSHOT__: This will take a screenshot of the victim's screen. THe .bmp file will be saved to __./Screenshots/__ with the current timestamp as the filename
 5. __SCRIPTS__: This uploads a script of your choice (found in __./Scripts/__) to the victim. The victim will run the scripts, save its output, send back to server, which saves results to __./Files/__ and then deletes the script and output from self (the victim) 
 6. __SHELL__: Run local shell commands on the CNC Server such as ```ls -lah``` to list current directory or even ```vim /tmp/file.txt``` to open a file to edit. This is helpful when needing to copy files to __./Files/__ or validate certain things
+7. __DETONATE__: This will perform a remote detonation on the Agent. The Agent will delete its .ps1 and kill the script. The CNC Server will also shut down.
 
 ### Folder Structure
 Idea of how the folder is structured
@@ -130,7 +131,6 @@ Archived files from previous testing. Will be removed when version 1.0 is comple
 * Mask Agent Detection
 * Run Agent in background (Maybe need another file to upload)
 * Add functions to commandServer.py in the MainLoopFunc(). Add While True to main() and then call functions based off user input
-* Remote detonation
 
 ## Authors
 
