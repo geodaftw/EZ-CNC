@@ -257,11 +257,13 @@ elseif($Indicator -eq '5' -And $PreviousCommand -ne $CurrentCommand){
 
 }
 ########
-# 6 - ENUMERATE
-# TODO: Need to incorporate
+# DETONATE - ENUMERATE
+# If this is triggered.. remove EZCNC-Agent.ps1 and exit the script
 #########
-elseif($Indicator -eq '6' -And $PreviousCommand -ne $CurrentCommand){
-    write-host "Let's enumerate"
+elseif($Indicator -eq 'detonate' -And $PreviousCommand -ne $CurrentCommand){
+    write-host "KILL SWITCH ENABLED. GOODBYE MY LOVE...."
+    rm .\EZCNC-Agent.ps1
+    exit
 }
 #########
 # Exit
@@ -277,5 +279,6 @@ else {
 Start-Sleep -s 5
 
 } # End infinit loop
+
 
 

@@ -121,7 +121,7 @@ def howToFunc():
     print(green1 + " Type " \
             + colorBlue + "shell" + colorBlack + " to run a local shell command")
     print(green1 + " Type " \
-            + colorBlue + "panic" + colorBlack + " to detonate remote agent")
+            + colorBlue + "detonate" + colorBlack + " to detonate remote agent")
     print(green1 + " Type " \
             + colorBlue + "q" + colorBlack + " or " \
             + colorBlue + "Q" + colorBlack + " to shutdown")
@@ -139,7 +139,7 @@ def mainLoopFunc():
                 ", " + colorBlue + "4" + colorBlack + \
                 ", " + colorBlue + "5" + colorBlack + \
                 ", " + colorBlue + "shell" + colorBlack + \
-                ", " + colorBlue + "panic" + colorBlack + \
+                ", " + colorBlue + "detonate" + colorBlack + \
                 ", or " + colorBlue + "q" + colorBlack + \
                 "/" + colorBlue + "Q" + colorBlack + "\n"))
         #print(user_input)
@@ -278,14 +278,23 @@ def mainLoopFunc():
         ############
         ## 'panic' - This will detonate the agent
         ############
-        elif user_input == 'panic':
+        elif user_input == 'detonate':
             command = raw_input(red2 + " You have requested to detonate the agent. Are you sure? 'yes' or 'no'\n")
             if command == 'yes':
                 command2 = raw_input(red3 + " To make sure you really want this, type 'yes' again\n")
                 if command2 == 'yes':
                     # SEND THE RM ./EZ-AGENT.ps1' command
-                    print(red4 + " Executing detonation! BOOM!!")
-                    continue # break command2 if
+                    # TODO: SEND A CUSTOM MESSAGE TO AGENT
+                    # TODO: ADD LOOP ON AGENT.PS1.. if CUSTOM MESSAGE, KILL powershell
+                    print(red4 + " Executing detonation...")
+                    f = open (cc, 'w')
+                    f.write('detonate\n')
+                    f.write('rm .\EZCNC-Agent.ps1\n')
+                    f.close()
+                    time.sleep(SLEEP)
+                    print(red4 + " BOOM!! Agent destroyed.. Goodbye..")
+                    #continue
+                    break # break command2 if
                 else:
                     print(red1 + " Good call! Not today..")
                     continue # break command2 else
