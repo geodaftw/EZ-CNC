@@ -131,6 +131,10 @@ Archived files from previous testing. Will be removed when version 1.0 is comple
 * Mask Agent Detection
 * Run Agent in background (Maybe need another file to upload)
 * Add functions to commandServer.py in the MainLoopFunc(). Add While True to main() and then call functions based off user input
+* Agent tokens (for individual commands from server)
+* Get a shell (via script?) 
+* sqlite database on server
+* pivoting? 
 
 ## Authors
 
