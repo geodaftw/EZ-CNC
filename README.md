@@ -134,7 +134,11 @@ Archived files from previous testing. Will be removed when version 1.0 is comple
 * Agent tokens (for individual commands from server)
 * Get a shell (via script?) 
 * sqlite database on server
-* pivoting? 
+* Modulate Server port (Allow changing of port after running)
+* Have the server screen display key information (Current Server port, number of agents checked in online/offline), last command run, port number for each agent, etc)
+* Generate a unique agent ID
+* AGENT: unique ID for each agent
+
 
 ## Authors
 
