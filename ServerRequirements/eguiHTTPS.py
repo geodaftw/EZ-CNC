@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 """Simple HTTP Server.
 
 This module builds on BaseHTTPServer by implementing the standard GET
@@ -14,21 +14,21 @@ __all__ = ["SimpleHTTPRequestHandler"]
 import time
 import os
 import posixpath
-import BaseHTTPServer
-import urllib
+import http.server
+import urllib.request, urllib.parse, urllib.error
 import cgi
 import sys
 import shutil
 import mimetypes
 import argparse
 try:
-    from cStringIO import StringIO
+    from io import StringIO
 except ImportError:
-    from StringIO import StringIO
+    from io import StringIO
 
 # including ssl
 import ssl
-import SimpleHTTPServer
+import http.server
 
 # Specify Port, if nothing, default to port 8000
 if len(sys.argv)<2:
@@ -40,7 +40,7 @@ else:
 
 
 
-class SimpleHTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
+class SimpleHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
 
     """Simple HTTP request handler with GET and HEAD commands.
 
@@ -128,7 +128,7 @@ class SimpleHTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             return None
         list.sort(key=lambda a: a.lower())
         f = StringIO()
-        displaypath = cgi.escape(urllib.unquote(self.path))
+        displaypath = cgi.escape(urllib.parse.unquote(self.path))
         f.write('<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">')
         f.write("<html>\n<title>Directory listing for %s</title>\n" % displaypath)
         f.write("<body>\n<h2>Directory listing for %s</h2>\n" % displaypath)
@@ -144,7 +144,7 @@ class SimpleHTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                 displayname = name + "@"
                 # Note: a link to a directory displays with @ and links with /
             f.write('<li><a href="%s">%s</a>\n'
-                    % (urllib.quote(linkname), cgi.escape(displayname)))
+                    % (urllib.parse.quote(linkname), cgi.escape(displayname)))
         f.write("</ul>\n<hr>\n</body>\n</html>\n")
         length = f.tell()
         f.seek(0)
@@ -166,9 +166,9 @@ class SimpleHTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         # abandon query parameters
         path = path.split('?',1)[0]
         path = path.split('#',1)[0]
-        path = posixpath.normpath(urllib.unquote(path))
+        path = posixpath.normpath(urllib.parse.unquote(path))
         words = path.split('/')
-        words = filter(None, words)
+        words = [_f for _f in words if _f]
         path = os.getcwd()
         for word in words:
             drive, word = os.path.splitdrive(word)
@@ -287,10 +287,10 @@ if __name__ == '__main__':
     web_dir = os.path.join(os.path.dirname(__file__), '../WebOnly')
     os.chdir(web_dir)
     
-    httpd = BaseHTTPServer.HTTPServer(('0.0.0.0', PORT), SimpleHTTPRequestHandler)
+    httpd = http.server.HTTPServer(('0.0.0.0', PORT), SimpleHTTPRequestHandler)
     httpd.socket = ssl.wrap_socket (httpd.socket, certfile='../ServerRequirements/server.pem', server_side=True)
     #httpd.socket = ssl.wrap_socket (httpd.socket, certfile='./ServerRequirements/server.pem', server_side=True)
-    print "[!] Server listening on port", PORT
+    print("[!] Server listening on port", PORT)
     
     buffer = 1
     sys.stderr = open('../ServerRequirements/log.txt', 'a', buffer)

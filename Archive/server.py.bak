@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 import sys, os
 import re
 import base64
@@ -79,7 +79,7 @@ while True:
             Input = str(SearchDL.groups())
 
             if Input != oldInput:
-                print("File Downloaded")
+                print "File Downloaded"
 
 
     oldInput = Input
