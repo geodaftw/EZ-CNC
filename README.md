@@ -14,7 +14,7 @@
 		   						    
           Written By: Eric "geoda" Guillen
           Twitter: @ericsguillen
-          Version 0.4.1
+          Version 0.5.0
 
 
 
@@ -126,7 +126,6 @@ Archived files from previous testing. Will be removed when version 1.0 is comple
 * Specify upload directory
 * Searching capability
 * Reverse Shell
-* Move from Python2.7 to Python3.x
 * Jitter calls to Server (Replicate with Agent)
 * Mask Agent Detection
 * Run Agent in background (Maybe need another file to upload)
