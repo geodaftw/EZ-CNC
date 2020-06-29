@@ -31,8 +31,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-This has been created and tested with Python 2.7.
-TODO: Port to Python 3
+This has been created and tested with Python 3
 
 
 ### Installing
@@ -40,7 +39,7 @@ TODO: Port to Python 3
 Install python requirements
 
 ```
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 
