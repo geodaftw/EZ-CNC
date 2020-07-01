@@ -19,9 +19,9 @@
 * COMPLETE: Server IP is based on system its run from when running commandServer.sh (Obviously)
 * TODO: More custom variables for portability??
 * COMPLETE: Add logging capabilities of output (./Logs/<date-log.txt) - pulled from server.py
-* TODO: Better HTTPS certificate
-* TODO: Limit webserver accessibility to only cc.js (right now, entire directory is accessible)
-* TODO: Mask server to look "legit" and have cc.js hidden more (so you go to web server and it's an ecommerce site, but if you go to ../../../../cc.js .. you find the cnc command
+* COMPLETE: Better HTTPS certificate - Added to the config.py
+* COMPLETE: Limit webserver accessibility to only cc.js (right now, entire directory is accessible) - created WebOnly directory that is only directory being served
+* COMPLETE: Mask server to look "legit" and have cc.js hidden more (so you go to web server and it's an ecommerce site, but if you go to ../../../../cc.js .. you find the cnc command - this is in WebOnly now
 * TODO: Currently living out of /Files/ and /WebOnly/ for file upload. Incorporate full path for uploads to victim?
 
 ## AGENT
@@ -35,6 +35,7 @@
 * TODO: Run in background
 * TODO: Remove comments (Leverage Template, but strip out comments/print statements)
 * TODO: Fix 404 error when pushing commands back to Server
+* COMPLETE: Added config.py directly into command.py as an option.
 
 ## CONFIG
 * TODO: Fix SSL Certificate
@@ -47,3 +48,6 @@
 * COMPLETE: commandServer.sh to commandServer.py
 * COMPLETE: eguiHTTPS.py
 * COMPLETE: server.py
+
+## Port to Python3
+* COMPLETE: Most of it is converted
