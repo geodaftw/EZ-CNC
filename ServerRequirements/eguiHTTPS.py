@@ -37,7 +37,9 @@ else:
     PORT = int(sys.argv[1])
 
 
-
+# Color Variables
+colorGreen = "\033[1;32;40m"
+colorBlack = "\033[0;37;40m"
 
 
 class SimpleHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
@@ -219,14 +221,22 @@ class SimpleHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
 
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])
+        #print("Content Length: " + str(content_length))
         body = self.rfile.read(content_length)
+        #print("Body: " + str(body))
         self.send_response(200)
+        #print("Status Code: " + self.send_response(200))
         self.end_headers()
+        #print("End Headers: " + self.end_headers())
         response = StringIO()
-        response.write(b'This is POST request. ')
-        response.write(b'Received: ')
-        response.write(body)
-        self.wfile.write(response.getvalue())
+        #print("Response: " + str(response))
+        #response.write(b'This is POST request. ')
+        response.write('This is POST request. ')
+        #response.write(b'Received: ')
+        response.write('Received: ')
+        response.write(str(body))
+        #print(response.write(body))
+        #self.wfile.write(response.getvalue())
         """fn = urlparse(body)"""
         """fn = urlparseResults.split("?")[0].split("/")[-1]"""
         #fn = time.strftime('%m-%d-%H%M%S', time.localtime())
@@ -235,8 +245,14 @@ class SimpleHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         if not fn:
             return (False, "cant create file name")
         try:
-            with open(fn, 'wb') as output_file:
-                output_file.write(body)
+            #with open(fn, 'wb') as output_file:
+            with open(fn, 'w') as output_file:
+                #output_file.write(str(body))
+                output_file.write(str(body.decode("utf-8"))) 
+                #response.write(str(body))
+
+                #print("Decode: " + body.decode("utf-8"))
+                #print("SUCCESS! ")
         except IOError:
             return (False, "cant create file")
 
@@ -290,7 +306,8 @@ if __name__ == '__main__':
     httpd = http.server.HTTPServer(('0.0.0.0', PORT), SimpleHTTPRequestHandler)
     httpd.socket = ssl.wrap_socket (httpd.socket, certfile='../ServerRequirements/server.pem', server_side=True)
     #httpd.socket = ssl.wrap_socket (httpd.socket, certfile='./ServerRequirements/server.pem', server_side=True)
-    print("[!] Server listening on port", PORT)
+    
+    print(colorGreen + "[!]" + colorBlack  + " Server listening on port", PORT)
     
     buffer = 1
     sys.stderr = open('../ServerRequirements/log.txt', 'a', buffer)
