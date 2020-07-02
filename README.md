@@ -14,7 +14,7 @@
 		   						    
           Written By: Eric "geoda" Guillen
           Twitter: @ericsguillen
-          Version 0.5.0
+          Version 0.5.1
 
 
 
