@@ -574,6 +574,7 @@ def mainLoopFunc(user_input):
 
     # Have a way to Add/Remove Ports
     def serverPort():
+
         # Ask if you want to add/remove port
         mainLoopFunc.command_input = input(yellow2 + " Do you want to " + \
                 colorBlue + "'add'" + colorBlack + \
@@ -772,6 +773,7 @@ if __name__ == "__main__":
         print('')
 
         
+
         howToFunc()
         user_input = str(input(yellow1 + \
 
