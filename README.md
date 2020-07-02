@@ -19,7 +19,7 @@
 
 
 
-This is a project I created to demonstrate how a Command and Control (C&C) Server and Agent communicate. The server runs python and stands up a web server. A powershell script (generated with config.py) needs to be deployed and ran on the victim machine. This will then loop the script and communicate with the CnC server for its tasks. 
+This is a project I created to demonstrate how a Command and Control (C&C) Server and Agent communicate. The server runs python and stands up a web server. A powershell script (generated with config.py or directly within the C&C Server) needs to be deployed and ran on the victim machine. This will then loop the script and communicate with the CnC server for its tasks. 
 
 *Note: While it acts like a shell, this is not a shell.*
 
@@ -60,6 +60,8 @@ The following available options are given when running ```config.py```
 * Remove Print Statements from final Agent
 * Generate a self-signed certificate
 
+Update: This can not be performed directly within __commandServer.py__
+
 ```
 python config.py
 ```
@@ -73,9 +75,9 @@ Once you deploy the powershell agent and its running, you can start the server
 Run the commandServer.py and specify the port
 
 ```
-python commandServer.py -p <port>
+python3 commandServer.py -p <port>
 ```
-If you don't specify a port, specify one ```python commandServer.py -p 8080``` like so. FOr most purpoases, this will be the same port when generating the Agent.
+If you don't specify a port, specify one ```python3 commandServer.py -p 8080``` like so. FOr most purpoases, this will be the same port when generating the Agent.
 
 The server will start up stating the port it's listening on.
 
@@ -87,6 +89,8 @@ Currently there are 7 options (with more options in the future):
 5. __SCRIPTS__: This uploads a script of your choice (found in __./Scripts/__) to the victim. The victim will run the scripts, save its output, send back to server, which saves results to __./Files/__ and then deletes the script and output from self (the victim) 
 6. __SHELL__: Run local shell commands on the CNC Server such as ```ls -lah``` to list current directory or even ```vim /tmp/file.txt``` to open a file to edit. This is helpful when needing to copy files to __./Files/__ or validate certain things
 7. __DETONATE__: This will perform a remote detonation on the Agent. The Agent will delete its .ps1 and kill the script. The CNC Server will also shut down.
+8. __AGENT__: This will perform a creation of the agent. This is the same as what __config.py__ used to be, but within the __commandServer.py__ now.
+9. __SERVERPORT__: This will add/remove ports while inside __commandServer.py__. Stats of listening ports will be displayed on the home screen
 
 ### Folder Structure
 Idea of how the folder is structured
@@ -132,8 +136,7 @@ Archived files from previous testing. Will be removed when version 1.0 is comple
 * Agent tokens (for individual commands from server)
 * Get a shell (via script?) 
 * sqlite database on server
-* Modulate Server port (Allow changing of port after running)
-* Have the server screen display key information (Current Server port, number of agents checked in online/offline), last command run, port number for each agent, etc)
+* Have the server screen display key information (Current Server port, number of agents checked in online/offline), last command run, port number for each agent, etc) - WORK IN PROGRESS
 * Generate a unique agent ID
 * AGENT: unique ID for each agent
 
