@@ -125,6 +125,9 @@ The only file in there is _cc.js_ which is the file the victim will be reading f
 ##### /Archive/
 Archived files from previous testing. Will be removed when version 1.0 is complete
 
+##### /Modules/
+This is where all modular functions will go. Haven't implemented yet, but this will be important 
+
 ### Todo: Future Upgrades
 * Specify upload directory
 * Searching capability
@@ -139,6 +142,7 @@ Archived files from previous testing. Will be removed when version 1.0 is comple
 * Have the server screen display key information (Current Server port, number of agents checked in online/offline), last command run, port number for each agent, etc) - WORK IN PROGRESS
 * Generate a unique agent ID
 * AGENT: unique ID for each agent
+* Update commandServer.py to move common functions to the /Modules/ directory. This will clean up the commandServer.py script greatly
 
 
 ## Authors
