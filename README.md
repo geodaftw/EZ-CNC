@@ -21,6 +21,8 @@
 
 This is a project I created to demonstrate how a Command and Control (C&C) Server and Agent communicate. The server runs python and stands up a web server. A powershell script (generated with config.py or directly within the C&C Server) needs to be deployed and ran on the victim machine. This will then loop the script and communicate with the CnC server for its tasks. 
 
+*Note: This project is still in Beta and still has many bugs.*
+
 *Note: While it acts like a shell, this is not a shell.*
 
 *Note: This is strictly for educational and research purposes and not to be used in ANY environment without proper consent*
