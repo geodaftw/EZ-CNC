@@ -27,6 +27,10 @@ This is a project I created to demonstrate how a Command and Control (C&C) Serve
 
 *Note: This is strictly for educational and research purposes and not to be used in ANY environment without proper consent*
 
+![EZ-CNC1](https://user-images.githubusercontent.com/13382707/156291089-cf6a928b-76ed-465d-87a9-5a8a6492f15b.PNG)
+![EZ-CNC2](https://user-images.githubusercontent.com/13382707/156291120-d7904005-2750-460e-bd0a-a7ee9c08723b.PNG)
+
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
