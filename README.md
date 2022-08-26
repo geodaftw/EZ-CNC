@@ -133,8 +133,14 @@ Archived files from previous testing. Will be removed when version 1.0 is comple
 
 ##### /Modules/
 This is where all modular functions will go. Haven't implemented yet, but this will be important 
+Future Modules will be:
+* Command
+* File Upload
+* File Download
+* Screencap
 
 ### Todo: Future Upgrades
+* Make more modular (All the modules (screencap, shell, upload, download): make their own .py and then call that script
 * Specify upload directory
 * Searching capability
 * Reverse Shell

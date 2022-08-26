@@ -22,4 +22,4 @@ requests-unixsocket==0.1.5
 selenium==3.141.0
 six==1.11.0
 urllib3>=1.21.1
-
+names==0.3.0
